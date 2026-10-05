@@ -1,0 +1,110 @@
+/* SIDEBAR */
+.sidebar {
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column;
+  padding: 20px 12px; box-sizing: border-box;
+  background: #0a0a0a; color: #e6e6e6;
+  border-right: 1px solid #1a1a1a;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  overflow-y: auto;
+  transition: width .25s;
+}
+.sidebar::-webkit-scrollbar { width: 6px }
+.sidebar::-webkit-scrollbar-thumb { background: #222; border-radius: 10px }
+.sidebar::-webkit-scrollbar-track { background: transparent }
+
+/* SECCIONES */
+.sidebar-section {
+  display: flex; flex-direction: column;
+  gap: 4px; margin-bottom: 26px;
+}
+.section-title {
+  padding: 0 12px 8px;
+  color: #6a6a78; font-size: 10.5px;
+  font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* LINKS */
+.sidebar-nav { display: flex; flex-direction: column; gap: 2px }
+
+.sidebar-nav > a,
+.sidebar-section > a,
+.dropdown-btn {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 12px; width: 100%;
+  color: #a8a8b0; font: 500 13.5px/1 inherit;
+  text-align: left; text-decoration: none;
+  background: none; border: 0; border-radius: 8px;
+  cursor: pointer; transition: all .2s;
+}
+.sidebar-nav > a i,
+.sidebar-section > a i,
+.dropdown-btn i {
+  width: 20px; flex-shrink: 0;
+  font-size: 16px; text-align: center;
+}
+
+.sidebar-nav > a:hover,
+.sidebar-section > a:hover,
+.dropdown-btn:hover {
+  background: #15151a; color: #fff;
+}
+
+/* ACTIVO */
+.sidebar-nav > a.active,
+.sidebar-section > a.active,
+.dropdown-content a.active {
+  background: linear-gradient(90deg, #d4b48326, #d4b48305);
+  color: #d4b483; font-weight: 600;
+  border-left: 3px solid #d4b483;
+  padding-left: 9px;
+}
+.sidebar-nav > a.active i,
+.sidebar-section > a.active i { color: #d4b483 }
+
+/* DROPDOWN */
+.dropdown-item { display: flex; flex-direction: column }
+.dropdown-btn { justify-content: space-between }
+.dropdown-btn .arrow {
+  margin-left: auto; font-size: 13px;
+  transition: transform .3s;
+}
+.dropdown-item.active .dropdown-btn .arrow { transform: rotate(180deg) }
+
+.dropdown-content {
+  display: none; flex-direction: column; gap: 2px;
+  margin: 4px 0 0 16px; padding-left: 12px;
+  border-left: 1px solid #1f1f24;
+}
+.dropdown-content.open { display: flex; animation: slideDown .25s }
+
+.dropdown-content a {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px; border-radius: 8px;
+  color: #8a8a98; font-size: 13px;
+  text-decoration: none; transition: all .2s;
+}
+.dropdown-content a i { width: 18px; font-size: 14px; text-align: center }
+.dropdown-content a:hover { background: #15151a; color: #fff }
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-6px) }
+  to { opacity: 1; transform: none }
+}
+
+/* CUENTA */
+.sidebar-account { margin-top: auto; margin-bottom: 0 }
+
+/* COLAPSADO */
+.sidebar.collapsed { padding: 20px 8px }
+.sidebar.collapsed .section-title,
+.sidebar.collapsed .sidebar-nav a span,
+.sidebar.collapsed .sidebar-section > a span,
+.sidebar.collapsed .dropdown-btn span,
+.sidebar.collapsed .dropdown-content span { display: none }
+
+.sidebar.collapsed .sidebar-nav > a,
+.sidebar.collapsed .sidebar-section > a,
+.sidebar.collapsed .dropdown-btn { justify-content: center; padding: 12px }
+.sidebar.collapsed .dropdown-content { display: none }

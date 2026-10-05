@@ -1,0 +1,8 @@
+<p>Updating {{category?.name}}</p>
+
+
+@if(category){
+<app-category-form [model]="category" (SubmitForm)="SaveChanges($event)"></app-category-form>
+}@else{
+<p>Cargando</p>
+}

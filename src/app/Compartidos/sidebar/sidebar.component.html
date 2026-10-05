@@ -1,0 +1,84 @@
+<aside class="sidebar" [class.collapsed]="ColpasedMenu">
+
+  <!-- SECCIÓN: CATEGORÍAS -->
+  <div class="sidebar-section">
+    <span class="section-title">Categories</span>
+
+    <nav class="sidebar-nav">
+
+      <a routerLink="/services" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        <i class="bi bi-house-door"></i>
+        <span>Home</span>
+      </a>
+
+      <a routerLink="/browse" routerLinkActive="active">
+        <i class="bi bi-compass"></i>
+        <span>Browse</span>
+      </a>
+
+      <a routerLink="/raids" routerLinkActive="active">
+        <i class="ti ti-swords"></i>
+        <span>Raids</span>
+      </a>
+
+      <a routerLink="/dungeons" routerLinkActive="active">
+        <i class="bi bi-shield-shaded"></i>
+        <span>Dungeons</span>
+      </a>
+
+      <a routerLink="/pvp" routerLinkActive="active">
+        <i class="bi bi-shield-fill-check"></i>
+        <span>PvP</span>
+      </a>
+
+    </nav>
+  </div>
+
+  <!-- SECCIÓN: ADMIN -->
+  <app-authorize>
+    <ng-content authorized>
+      <div class="sidebar-section">
+        <span class="section-title">Admin</span>
+
+        <div class="dropdown-item" [class.active]="dropdownOrdersOpen">
+          <button class="dropdown-btn" (click)="toggleDropdown('ordenes')">
+            <i class="bi bi-grid"></i>
+            <span>Admin Panel</span>
+            <i class="bi bi-chevron-down arrow"></i>
+          </button>
+
+          <div class="dropdown-content" [class.open]="dropdownOrdersOpen">
+            <a routerLink="/categories" routerLinkActive="active" (click)="closeMenu(); closeAdminMenu();">
+              <i class="bi bi-grid-fill"></i>
+              <span>Categories</span>
+            </a>
+            <a routerLink="/products/new" routerLinkActive="active" (click)="closeMenu(); closeAdminMenu();">
+              <i class="bi bi-grid-fill"></i>
+              <span>New Product</span>
+            </a>
+            <a routerLink="/booster-hub" routerLinkActive="active">
+              <i class="bi bi-shield-shaded"></i>
+              <span>Booster Hub</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </ng-content>
+  </app-authorize>
+
+  <!-- SECCIÓN: CUENTA -->
+  <div class="sidebar-section sidebar-account">
+    <span class="section-title">Account</span>
+
+    <a routerLink="/orders" routerLinkActive="active">
+      <i class="bi bi-clipboard-check"></i>
+      <span>My Orders</span>
+    </a>
+
+    <a routerLink="/wishlist" routerLinkActive="active">
+      <i class="bi bi-heart"></i>
+      <span>Wishlist</span>
+    </a>
+  </div>
+
+</aside>

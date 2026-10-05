@@ -1,0 +1,4 @@
+<button class="btn-new-category ti ti-cube-plus" routerLink="/categories/new"></button>
+
+
+<app-list-category [categoryList]="categories" (deleteCategory)="deleteCategory($event)"></app-list-category>

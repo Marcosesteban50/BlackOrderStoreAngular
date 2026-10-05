@@ -1,0 +1,32 @@
+@if (errors.length > 0) {
+<div class="alert alert-danger">
+    <ul>
+        @for (error of errors; track $index) {
+        <li>{{ error }}</li>
+        }
+    </ul>
+</div>
+}
+
+
+<form (submit)="saveChanges()" [formGroup]="form">
+
+    <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput [formControl]="form.controls.email">
+        <mat-error>{{ getEmailErrors() }}</mat-error>
+    </mat-form-field>
+
+
+    <mat-form-field appearance="outline">
+        <mat-label>Password</mat-label>
+        <input matInput type="password" [formControl]="form.controls.password">
+        <mat-error>{{ getPasswordErrors() }}</mat-error>
+    </mat-form-field>
+
+
+    <div class="button-container">
+              <button mat-flat-button type="submit" [disabled]="form.invalid">Sign Up</button>
+    </div>
+
+</form>

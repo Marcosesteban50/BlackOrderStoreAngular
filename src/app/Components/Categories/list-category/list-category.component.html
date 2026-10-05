@@ -1,0 +1,75 @@
+<div class="categories-container">
+
+    <header class="categories-header">
+        <span class="section-label">EXPLORE OUR SERVICES</span>
+        <h1>Choose Your Category</h1>
+        <p>Select a category and discover the services available for you.</p>
+    </header>
+
+    @if (loading) {
+    <div class="state-message">
+        <div class="spinner"></div>
+        <span>Cargando categorías…</span>
+    </div>
+    } @else if (error) {
+    <div class="state-message state-message--error">{{ error }}</div>
+    } @else {
+
+    <div class="categories-list">
+        @for (x of categoryList; track x.id) {
+        <article class="category-card">
+
+            <!-- MEDIA -->
+            <div class="category-media">
+                <img [src]="x.images?.[0] || 'assets/images/category-placeholder.jpg'"
+                    [alt]="x.name + ' - WoW Boosting Service | BlackOrderStore'" class="category-image" loading="lazy">
+
+                <div class="category-overlay"></div>
+
+                <button class="wish-btn" aria-label="Add to wishlist" type="button">
+                    <i class="bi bi-heart"></i>
+                </button>
+
+                <span class="category-badge">
+                    <i class="bi" [ngClass]="getCategoryIcon(x.name)"></i>
+                    {{ x.name }}
+                </span>
+            </div>
+
+            <!-- BODY -->
+            <div class="category-body">
+
+                <h3 class="category-title">{{ x.name }}</h3>
+
+                <p class="category-desc">
+                    <i class="bi bi-check2-circle"></i>
+                    {{ x.description }}
+                </p>
+
+                <div class="category-footer">
+
+                    <button class="btn-details" [routerLink]="['/products/filter']" [queryParams]="{ categoryId: x.id }"
+                        type="button">
+                        <span class="btn-details-label">Explore Services</span>
+                        <i class="ti ti-arrow-right"></i>
+                    </button>
+
+                    <div class="category-actions">
+                        <button class="btn-icon btn-update" [routerLink]="['/categories/update', x.id]"
+                            aria-label="Update category" type="button">
+                            <i class="ti ti-pencil"></i>
+                        </button>
+
+                        <button class="btn-icon btn-delete" (click)="delete(x.id)" aria-label="Delete category"
+                            type="button">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </article>
+        }
+    </div>
+    }
+</div>

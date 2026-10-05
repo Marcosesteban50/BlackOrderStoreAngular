@@ -1,0 +1,58 @@
+<header class="navbar">
+
+  <!-- LOGO -->
+  <a class="navbar-brand" routerLink="/">
+    <div class="brand-icon">B</div>
+    <span class="brand-name">BLACK ORDER</span>
+  </a>
+
+  <!-- BUSCADOR -->
+  <div class="navbar-search">
+    <input type="search" placeholder="Search" />
+    <button class="search-btn">
+      <i class="bi bi-search"></i>
+    </button>
+  </div>
+
+  <!-- ACCIONES -->
+  <div class="navbar-actions">
+
+    <a routerLink="/wishlist" class="nav-action">
+      <i class="bi bi-heart"></i>
+      <span>Wishlist</span>
+    </a>
+
+    <a routerLink="/cart" class="nav-action">
+      <i class="bi bi-cart"></i>
+      <span>Cart</span>
+    </a>
+
+    <a routerLink="/support" class="nav-action">
+      <i class="bi bi-headset"></i>
+      <span>Support</span>
+    </a>
+
+    @if (securityService.isLoggedIn()) {
+      <div class="user-menu">
+        <div class="avatar">
+          <img src="https://i.pravatar.cc/40?img=12" alt="User" />
+          <span class="status"></span>
+        </div>
+        <div class="user-info">
+          <span class="user-name">BlackOrder</span>
+          <span class="user-status">Online</span>
+        </div>
+        <button class="logout-btn" (click)="securityService.logout()" title="Logout">
+          <i class="bi bi-box-arrow-right"></i>
+        </button>
+      </div>
+    } @else {
+      <a routerLink="/sign-in" class="nav-action">
+        <i class="bi bi-person"></i>
+        <span>Sign In</span>
+      </a>
+    }
+
+  </div>
+
+</header>

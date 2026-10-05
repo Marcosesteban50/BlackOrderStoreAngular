@@ -1,0 +1,36 @@
+.btn-new-category {
+    height: 42px;
+    padding: 0 20px;
+    position: absolute;
+    top: 20%;
+    left: 20%;
+
+
+
+    background: #e2b154;
+    color: #06070a;
+
+    border: 1px solid #e2b154;
+    border-radius: 10px;
+
+    font-family: "Inter", sans-serif;
+    font-size: 25px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.btn-new-category:hover {
+    background: #f0c36a;
+    border-color: #f0c36a;
+    transform: translateY(-1px);
+}
+
+.btn-new-category:active {
+    transform: translateY(0);
+}

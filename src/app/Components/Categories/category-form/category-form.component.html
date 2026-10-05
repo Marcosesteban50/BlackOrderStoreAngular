@@ -1,0 +1,30 @@
+
+
+<form (submit)="SaveChanges()" [formGroup]="form">
+
+    <mat-form-field appearance="outline">
+        <mat-label>Name</mat-label>
+        <input matInput [formControl]="form.controls.name">
+        <mat-error></mat-error>
+    </mat-form-field>
+
+       <mat-form-field appearance="outline">
+        <mat-label>Description</mat-label>
+        <input matInput [formControl]="form.controls.description">
+        <mat-error></mat-error>
+    </mat-form-field>
+
+
+    <!-- Image uploader -->
+    <div>
+        <app-input-img title="Product photo" [currentImageUrls]="model?.images" (fileSelected)="SelectedFiles($event)">
+        </app-input-img>
+    </div>
+
+
+    <div class="btn-container">
+        <button mat-flat-button type="submit" [disabled]="form.invalid">Save Changes</button>
+        <a mat-stroked-button routerLink="/categories">Cancel</a>
+    </div>
+
+</form>

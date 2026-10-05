@@ -1,0 +1,55 @@
+<div class="products-container">
+
+  <!-- HEADER DE CATEGORÍA -->
+  @if (category) {
+  <header class="category-header">
+    <span class="section-label">{{ category.name | uppercase }}</span>
+    <h1>Servicios disponibles</h1>
+  </header>
+  }
+
+  @if (loading) {
+  <div class="loading">Cargando productos...</div>
+  } @else if (error) {
+  <div class="error">{{ error }}</div>
+  } @else {
+
+  <div class="products-list">
+
+    @for (x of productList; track $index) {
+    <article class="product-card">
+
+      <div class="product-banner">
+        <img [src]="x.images?.[0]" [alt]="x.name" class="product-image">
+      </div>
+
+      <div class="product-body">
+        <h3 class="product-title">{{ x.name }}</h3>
+        <p class="product-description">{{ x.description }}</p>
+
+        <div class="product-footer">
+          <div class="product-price">
+            <span class="price-label">Starting at</span>
+            <span class="price-value">{{ x.price | currency }}</span>
+          </div>
+
+          <button class="btn-service">
+            Ver servicio
+            <i class="ti ti-arrow-right"></i>
+          </button>
+
+
+          <button class="btn-icon btn-delete" (click)="delete(x.id)" aria-label="Delete Product" type="button">
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+      </div>
+
+    </article>
+    }
+
+  </div>
+
+  }
+
+</div>

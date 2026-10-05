@@ -1,0 +1,64 @@
+<h3>{{ title }}</h3>
+
+<div>
+    <button type="button" class="btn-upload-image" (click)="fileLoader.click()">
+
+        <i class="bi bi-image"></i>
+    </button>
+
+
+    <button type="button" class="btn-delete-all" (click)="deleteAllImages()">
+        <i class="bi bi-trash"></i>
+    </button>
+
+
+    <input type="file" multiple hidden #fileLoader accept="image/*" (change)="onChange($event)">
+</div>
+
+
+<!-- New Images -->
+<div class="images-preview">
+
+
+    <!-- Loop through each image -->
+    @for (image of imagesBase64; track $index) {
+
+    <div class="preview">
+
+        <!-- We use index + 1 to make it nicer for the UI -->
+        <img [src]="image" [alt]="'Image ' + ($index + 1)">
+
+        <button type="button" class="btn-delete" (click)="deleteImage($index)">
+            ×
+        </button>
+
+    </div>
+
+    }
+
+</div>
+
+
+<!-- If there are current images -->
+@if (currentImageUrls?.length) {
+
+<div class="images-preview current">
+
+    <!-- Loop through each image -->
+    @for (image of currentImageUrls; track $index) {
+
+    <div class="preview">
+
+        <img [src]="image" [alt]="'Current image ' + ($index + 1)">
+
+        <button type="button" class="btn-delete" (click)="deleteCurrentImage($index)">
+            ×
+        </button>
+
+    </div>
+
+    }
+
+</div>
+
+}
