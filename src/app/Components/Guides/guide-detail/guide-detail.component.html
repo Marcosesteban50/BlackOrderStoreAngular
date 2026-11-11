@@ -1,0 +1,98 @@
+<section class="detail-page">
+  @if (loading) {
+    <div class="state">
+      <div class="spinner"></div>
+      <p>Cargando guía...</p>
+    </div>
+  } @else if (notFound) {
+    <div class="state">
+      <i class="bi bi-compass"></i>
+      <h2>Esta guía no existe</h2>
+      <p>Puede que se haya movido o que todavía no esté publicada.</p>
+      <a class="btn-primary" routerLink="/guides">Volver a las guías</a>
+    </div>
+  } @else if (error) {
+    <div class="state state-error">
+      <i class="bi bi-exclamation-triangle"></i>
+      <p>{{ error }}</p>
+      <button class="btn-primary" type="button" (click)="reload()">
+        Reintentar
+      </button>
+    </div>
+  } @else if (guide) {
+    <a class="back" routerLink="/guides">
+      <i class="bi bi-arrow-left"></i> Todas las guías
+    </a>
+
+    <header class="article-header">
+      @if (guide.categoryName) {
+        <span class="badge">{{ guide.categoryName }}</span>
+      }
+
+      <h1>{{ guide.title }}</h1>
+
+      @if (guide.summary) {
+        <p class="lead">{{ guide.summary }}</p>
+      }
+
+      <div class="meta">
+        @if (guide.level) {
+          <span><i class="bi bi-bar-chart"></i>{{ guide.level }}</span>
+        }
+        @if (guide.expansion) {
+          <span><i class="bi bi-globe2"></i>{{ guide.expansion }}</span>
+        }
+        @if (guide.publishedAt) {
+          <span>
+            <i class="bi bi-calendar3"></i>
+            {{ guide.publishedAt | date: 'dd MMM yyyy' }}
+          </span>
+        }
+        <span><i class="bi bi-eye"></i>{{ guide.viewCount }} vistas</span>
+      </div>
+    </header>
+
+    @if (guide.coverUrl) {
+      <div class="cover">
+        <img [src]="guide.coverUrl" [alt]="guide.title" />
+      </div>
+    }
+
+    <article class="content" [innerHTML]="guide.contentHtml"></article>
+
+    @if (videos().length > 0) {
+      <section class="videos">
+        <h2><i class="bi bi-play-btn"></i> Video</h2>
+
+        @for (media of videos(); track media.id) {
+          @if (embedUrl(media); as embed) {
+            <div class="video-frame">
+              <iframe
+                [src]="embed"
+                [title]="media.caption || guide.title"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+                referrerpolicy="no-referrer"
+              ></iframe>
+            </div>
+
+            @if (media.caption) {
+              <p class="caption">{{ media.caption }}</p>
+            }
+          } @else {
+            <a
+              class="video-link"
+              [href]="media.url"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <i class="bi bi-play-circle"></i>
+              <span>{{ media.caption || 'Ver el video completo' }}</span>
+              <i class="bi bi-box-arrow-up-right"></i>
+            </a>
+          }
+        }
+      </section>
+    }
+  }
+</section>

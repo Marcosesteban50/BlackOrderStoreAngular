@@ -1,0 +1,168 @@
+<section class="guides-page">
+  <header class="guides-hero">
+    <span class="eyebrow"><i class="bi bi-journal-text"></i> Biblioteca gratuita</span>
+    <h1>Guías y <span class="accent">videos</span> de WoW</h1>
+    <p>
+      Aprende a subir de nivel, farmear oro y conseguir monturas con guías claras,
+      directas y sin relleno.
+    </p>
+  </header>
+
+  <div class="filters">
+    <div class="search-box">
+      <i class="bi bi-search"></i>
+      <input
+        type="search"
+        placeholder="Buscar por título o tema..."
+        aria-label="Buscar guías"
+        [(ngModel)]="search"
+        (keyup.enter)="applyFilters()"
+      />
+    </div>
+
+    <select
+      aria-label="Filtrar por nivel"
+      [(ngModel)]="level"
+      (change)="applyFilters()"
+    >
+      <option value="">Todos los niveles</option>
+      @for (levelOption of levels; track levelOption) {
+        <option [value]="levelOption">{{ levelOption }}</option>
+      }
+    </select>
+
+    <button class="btn-primary" type="button" (click)="applyFilters()">
+      <i class="bi bi-funnel"></i> Filtrar
+    </button>
+
+    @if (search || category || level) {
+      <button class="btn-ghost" type="button" (click)="clearFilters()">
+        Limpiar
+      </button>
+    }
+  </div>
+
+  <div class="chips">
+    <button
+      class="chip"
+      type="button"
+      [class.active]="!category"
+      (click)="selectCategory('')"
+    >
+      Todas
+    </button>
+
+    @for (guideCategory of categories; track guideCategory.id) {
+      <button
+        class="chip"
+        type="button"
+        [class.active]="category === guideCategory.slug"
+        (click)="selectCategory(guideCategory.slug)"
+      >
+        {{ guideCategory.name }}
+      </button>
+    }
+  </div>
+
+  @if (loading) {
+    <div class="state">
+      <div class="spinner"></div>
+      <p>Cargando guías...</p>
+    </div>
+  } @else if (error) {
+    <div class="state state-error">
+      <i class="bi bi-exclamation-triangle"></i>
+      <p>{{ error }}</p>
+      <button class="btn-primary" type="button" (click)="loadGuides()">
+        Reintentar
+      </button>
+    </div>
+  } @else if (guides.length === 0) {
+    <div class="state">
+      <i class="bi bi-journal-x"></i>
+      <p>No encontramos guías con esos filtros.</p>
+      <button class="btn-ghost" type="button" (click)="clearFilters()">
+        Ver todas
+      </button>
+    </div>
+  } @else {
+    <p class="results">
+      {{ totalCount }} guía{{ totalCount === 1 ? '' : 's' }} disponible{{
+        totalCount === 1 ? '' : 's'
+      }}
+    </p>
+
+    <div class="guides-grid">
+      @for (guide of guides; track guide.id) {
+        <a class="guide-card" [routerLink]="['/guides', guide.slug]">
+          <div class="cover">
+            @if (guide.coverUrl) {
+              <img [src]="guide.coverUrl" [alt]="guide.title" loading="lazy" />
+            } @else {
+              <div class="cover-fallback">
+                <i class="bi bi-journal-richtext"></i>
+              </div>
+            }
+
+            @if (guide.categoryName) {
+              <span class="badge">{{ guide.categoryName }}</span>
+            }
+          </div>
+
+          <div class="card-body">
+            <h2>{{ guide.title }}</h2>
+
+            @if (guide.summary) {
+              <p>{{ guide.summary }}</p>
+            }
+
+            <div class="card-meta">
+              @if (guide.level) {
+                <span><i class="bi bi-bar-chart"></i>{{ guide.level }}</span>
+              }
+              <span><i class="bi bi-eye"></i>{{ guide.viewCount }}</span>
+              @if (guide.publishedAt) {
+                <span>
+                  <i class="bi bi-calendar3"></i>
+                  {{ guide.publishedAt | date: 'dd MMM yyyy' }}
+                </span>
+              }
+            </div>
+          </div>
+        </a>
+      }
+    </div>
+
+    @if (totalPages > 1) {
+      <nav class="pagination" aria-label="Paginación de guías">
+        <button
+          type="button"
+          [disabled]="page === 1"
+          (click)="goToPage(page - 1)"
+          aria-label="Página anterior"
+        >
+          <i class="bi bi-chevron-left"></i>
+        </button>
+
+        @for (pageNumber of pages(); track pageNumber) {
+          <button
+            type="button"
+            [class.active]="pageNumber === page"
+            (click)="goToPage(pageNumber)"
+          >
+            {{ pageNumber }}
+          </button>
+        }
+
+        <button
+          type="button"
+          [disabled]="page === totalPages"
+          (click)="goToPage(page + 1)"
+          aria-label="Página siguiente"
+        >
+          <i class="bi bi-chevron-right"></i>
+        </button>
+      </nav>
+    }
+  }
+</section>

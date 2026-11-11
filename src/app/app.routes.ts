@@ -42,5 +42,20 @@ export const routes: Routes = [
 
   { path: 'cart', component: CartComponent },
 
+  {
+    path: 'guides',
+    loadComponent: () =>
+      import('./Components/Guides/index-guide/index-guide.component').then(
+        (m) => m.IndexGuideComponent
+      ),
+  },
+  {
+    path: 'guides/:slug',
+    loadComponent: () =>
+      import('./Components/Guides/guide-detail/guide-detail.component').then(
+        (m) => m.GuideDetailComponent
+      ),
+  },
+
   { path: 'userList', component: UserListComponent },
 ];
