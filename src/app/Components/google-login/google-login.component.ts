@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { SecurityService } from '../../Services/security.service';
 import { CartService } from '../../Services/cart.service';
 import { PromptNotification } from '../../Models/Security/google';
