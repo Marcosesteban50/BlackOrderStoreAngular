@@ -91,6 +91,64 @@
   letter-spacing: 0.02em;
 }
 
+.field-head {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.field-head > span {
+  color: var(--text);
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.link-btn {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  padding: 0;
+  background: none;
+  border: none;
+  color: var(--gold-light);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.link-btn:hover {
+  text-decoration: underline;
+}
+
+.content-preview {
+  margin-top: 6px;
+  padding: 16px 18px;
+  background: #05070a;
+  border: 1px dashed rgba(245, 158, 11, 0.35);
+  border-radius: 11px;
+  color: #d7dbe2;
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+.content-preview :is(h2, h3) {
+  margin: 1.2em 0 0.5em;
+  color: var(--text);
+  font-family: 'Cinzel', Georgia, serif;
+}
+
+.content-preview p {
+  margin: 0 0 0.8em;
+}
+
+.content-preview :is(ul, ol) {
+  margin: 0 0 0.8em;
+  padding-left: 1.3em;
+}
+
 input[type='text'],
 input[type='url'],
 textarea,

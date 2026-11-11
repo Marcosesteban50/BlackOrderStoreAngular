@@ -1,0 +1,136 @@
+<section class="categories-page">
+  <header class="page-header">
+    <div>
+      <a class="back" routerLink="/guides/manage">
+        <i class="bi bi-arrow-left"></i> Guías
+      </a>
+      <h1>Categorías de guías</h1>
+      <p>Organiza el contenido del módulo. El slug se genera automáticamente.</p>
+    </div>
+  </header>
+
+  @if (error) {
+    <div class="alert">
+      <i class="bi bi-exclamation-triangle"></i> {{ error }}
+    </div>
+  }
+
+  <form class="category-form" [formGroup]="form" (ngSubmit)="submit()">
+    <h2>{{ isEdit ? 'Editar categoría' : 'Nueva categoría' }}</h2>
+
+    <div class="grid">
+      <label class="field">
+        <span>Nombre *</span>
+        <input
+          type="text"
+          formControlName="name"
+          maxlength="100"
+          placeholder="Leveling"
+        />
+        @if (form.controls.name.touched && form.controls.name.invalid) {
+          <small class="error-text">El nombre es obligatorio (máximo 100).</small>
+        }
+      </label>
+
+      <label class="field">
+        <span>Slug</span>
+        <input
+          type="text"
+          formControlName="slug"
+          maxlength="120"
+          placeholder="se genera del nombre"
+        />
+      </label>
+
+      <label class="field">
+        <span>Orden</span>
+        <input type="number" formControlName="sortOrder" min="0" />
+      </label>
+
+      <label class="field wide">
+        <span>Descripción</span>
+        <textarea
+          formControlName="description"
+          rows="2"
+          maxlength="500"
+          placeholder="Para qué sirve esta categoría"
+        ></textarea>
+      </label>
+    </div>
+
+    <div class="actions">
+      @if (isEdit) {
+        <button class="btn-ghost" type="button" (click)="cancelEdit()">Cancelar</button>
+      }
+      <button class="btn-primary" type="submit" [disabled]="saving">
+        @if (saving) {
+          <span class="mini-spinner"></span> Guardando...
+        } @else {
+          <i class="bi bi-check-lg"></i>
+          {{ isEdit ? 'Guardar cambios' : 'Crear categoría' }}
+        }
+      </button>
+    </div>
+  </form>
+
+  @if (loading) {
+    <div class="state">
+      <div class="spinner"></div>
+      <p>Cargando categorías...</p>
+    </div>
+  } @else if (categories.length === 0) {
+    <div class="state">
+      <i class="bi bi-tags"></i>
+      <p>Todavía no hay categorías.</p>
+    </div>
+  } @else {
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Categoría</th>
+            <th>Slug</th>
+            <th>Orden</th>
+            <th class="actions-col">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (category of categories; track category.id) {
+            <tr>
+              <td>
+                <div class="name-cell">
+                  <strong>{{ category.name }}</strong>
+                  @if (category.description) {
+                    <span>{{ category.description }}</span>
+                  }
+                </div>
+              </td>
+              <td><code>/{{ category.slug }}</code></td>
+              <td>{{ category.sortOrder }}</td>
+              <td class="actions-col">
+                <button
+                  class="icon-btn"
+                  type="button"
+                  title="Editar"
+                  aria-label="Editar categoría"
+                  (click)="edit(category)"
+                >
+                  <i class="bi bi-pencil"></i>
+                </button>
+                <button
+                  class="icon-btn danger"
+                  type="button"
+                  title="Eliminar"
+                  aria-label="Eliminar categoría"
+                  (click)="remove(category)"
+                >
+                  <i class="bi bi-trash"></i>
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>

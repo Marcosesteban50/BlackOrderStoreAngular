@@ -8,6 +8,7 @@ import {
   GuideFilter,
   GuideSummary,
   PagedResult,
+  SaveGuideCategory,
 } from '../Models/GuideDTO/Guide';
 
 @Injectable({
@@ -41,6 +42,28 @@ export class GuideService {
 
   getCategories(): Observable<GuideCategory[]> {
     return this.http.get<GuideCategory[]>(`${this.urlBase}/categories`);
+  }
+
+  registerView(slug: string): Observable<void> {
+    return this.http.post<void>(
+      `${this.urlBase}/${encodeURIComponent(slug)}/view`,
+      {},
+    );
+  }
+
+  createCategory(model: SaveGuideCategory): Observable<GuideCategory> {
+    return this.http.post<GuideCategory>(`${this.urlBase}/categories`, model);
+  }
+
+  updateCategory(id: string, model: SaveGuideCategory): Observable<GuideCategory> {
+    return this.http.put<GuideCategory>(
+      `${this.urlBase}/categories/${id}`,
+      model,
+    );
+  }
+
+  deleteCategory(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.urlBase}/categories/${id}`);
   }
 
   getManaged(filter: GuideFilter): Observable<PagedResult<GuideSummary>> {

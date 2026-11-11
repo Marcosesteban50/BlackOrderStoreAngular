@@ -46,8 +46,14 @@
             <small class="hint">{{ form.controls.summary.value.length }}/500</small>
           </label>
 
-          <label class="field">
-            <span>Contenido (HTML) *</span>
+          <div class="field">
+            <div class="field-head">
+              <span>Contenido (HTML) *</span>
+              <button class="link-btn" type="button" (click)="showPreview = !showPreview">
+                <i class="bi" [class.bi-eye]="!showPreview" [class.bi-eye-slash]="showPreview"></i>
+                {{ showPreview ? 'Ocultar vista previa' : 'Vista previa' }}
+              </button>
+            </div>
             <textarea
               formControlName="contentHtml"
               rows="16"
@@ -59,7 +65,12 @@
             @if (form.controls.contentHtml.touched && form.controls.contentHtml.invalid) {
               <small class="error-text">El contenido es obligatorio.</small>
             }
-          </label>
+            @if (showPreview) {
+              <div class="content-preview">
+                <div [innerHTML]="form.controls.contentHtml.value"></div>
+              </div>
+            }
+          </div>
 
           <fieldset class="video-box">
             <legend><i class="bi bi-play-btn"></i> Video (opcional)</legend>

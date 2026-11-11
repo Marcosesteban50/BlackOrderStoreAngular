@@ -39,6 +39,7 @@ export class GuideDetailComponent implements OnInit {
         next: (guide) => {
           this.guide = guide;
           this.loading = false;
+          this.registerView(guide.slug);
         },
         error: (response) => {
           this.loading = false;
@@ -82,5 +83,21 @@ export class GuideDetailComponent implements OnInit {
     this.error = '';
     this.loading = true;
     this.ngOnInit();
+  }
+
+  private registerView(slug: string): void {
+    this.guideService
+      .registerView(slug)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          if (this.guide) {
+            this.guide.viewCount += 1;
+          }
+        },
+        error: () => {
+          // Best effort: a failed view count must not break the page.
+        },
+      });
   }
 }

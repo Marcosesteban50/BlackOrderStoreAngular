@@ -74,6 +74,14 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'guides/categories',
+    canActivate: [AdminGuard],
+    loadComponent: () =>
+      import('./Components/Guides/manage-guide-categories/manage-guide-categories.component').then(
+        (m) => m.ManageGuideCategoriesComponent
+      ),
+  },
+  {
     path: 'guides/:slug',
     loadComponent: () =>
       import('./Components/Guides/guide-detail/guide-detail.component').then(

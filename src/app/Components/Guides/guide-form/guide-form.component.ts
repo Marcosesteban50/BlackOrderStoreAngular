@@ -28,6 +28,7 @@ export class GuideFormComponent implements OnInit {
   coverPreview: string | null = null;
   loading = false;
   saving = false;
+  showPreview = false;
   error = '';
 
   form = this.fb.nonNullable.group({

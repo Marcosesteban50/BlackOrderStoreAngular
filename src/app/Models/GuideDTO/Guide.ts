@@ -40,6 +40,13 @@ export interface GuideCategory {
   sortOrder: number;
 }
 
+export interface SaveGuideCategory {
+  name: string;
+  slug?: string | null;
+  description?: string | null;
+  sortOrder: number;
+}
+
 export interface PagedResult<T> {
   items: T[];
   page: number;
