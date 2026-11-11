@@ -30,36 +30,48 @@
     </div>
   } @else {
     <div class="products-list">
-      @for (x of productList; track $index) {
+      @for (x of productList; track x.id) {
         <article class="product-card">
           <div class="product-banner">
-            <img [src]="x.images?.[0]" [alt]="x.name" class="product-image" />
+            <a [routerLink]="['/products', x.id]" class="product-image-link">
+              <img [src]="x.images?.[0]" [alt]="x.name" class="product-image" />
+            </a>
             <div class="banner-overlay"></div>
             <div class="rune-glow"></div>
 
-            <!-- Contenedor de acciones flotantes -->
             <div class="banner-actions">
               <button
                 class="wish-btn"
-                aria-label="Add to wishlist"
+                [class.active]="isFavorite(x.id)"
+                aria-label="Añadir a deseos"
                 type="button"
-                title="Add to WishList"
+                [title]="isFavorite(x.id) ? 'Quitar de deseos' : 'Añadir a deseos'"
+                (click)="toggleFavorite(x)"
               >
-                <i class="bi bi-heart"></i>
+                <i
+                  class="bi"
+                  [class.bi-heart-fill]="isFavorite(x.id)"
+                  [class.bi-heart]="!isFavorite(x.id)"
+                ></i>
               </button>
 
-              <button
-                class="btn-icon btn-delete"
-                (click)="delete(x.id)"
-                aria-label="Delete Product"
-                title="Eliminar servicio"
-              >
-                <i class="bi bi-trash"></i>
-              </button>
+              @if (security.isAdmin()) {
+                <button
+                  class="btn-icon btn-delete"
+                  (click)="delete(x.id)"
+                  aria-label="Delete Product"
+                  title="Eliminar servicio"
+                >
+                  <i class="bi bi-trash"></i>
+                </button>
+              }
             </div>
           </div>
+
           <div class="product-body">
-            <h3 class="product-title">{{ x.name }}</h3>
+            <h3 class="product-title">
+              <a [routerLink]="['/products', x.id]">{{ x.name }}</a>
+            </h3>
             <p class="product-description">{{ x.description }}</p>
 
             <div class="product-footer">
@@ -71,8 +83,17 @@
                 </span>
               </div>
 
-              <button class="btn-service" type="button" (click)="addToCart(x)">
-                <i class="ti ti-arrow-right"> Add to Cart </i>
+              <button
+                class="btn-service"
+                type="button"
+                [disabled]="x.stock <= 0"
+                (click)="addToCart(x)"
+              >
+                @if (x.stock <= 0) {
+                  <i class="ti ti-ban"></i> Agotado
+                } @else {
+                  <i class="ti ti-arrow-right"></i> Add to Cart
+                }
               </button>
             </div>
           </div>

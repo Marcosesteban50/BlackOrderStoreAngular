@@ -1,0 +1,69 @@
+<section class="shop-page">
+  <header class="shop-header">
+    <div>
+      <span class="shop-eyebrow"><i class="bi bi-heart"></i> Guardados</span>
+      <h1 class="shop-title">Lista de deseos</h1>
+      <p class="shop-subtitle">Los servicios que guardaste para más tarde.</p>
+    </div>
+
+    @if (items.length > 0) {
+      <a class="btn-outline" routerLink="/products">
+        <i class="bi bi-grid"></i> Seguir explorando
+      </a>
+    }
+  </header>
+
+  @if (loading) {
+    <div class="wishlist-grid">
+      @for (placeholder of [1, 2, 3]; track placeholder) {
+        <div class="skeleton" style="height: 260px"></div>
+      }
+    </div>
+  } @else if (error) {
+    <div class="empty-state">
+      <i class="bi bi-exclamation-triangle"></i>
+      <h2>Algo salió mal</h2>
+      <p>{{ error }}</p>
+      <button class="btn-outline" type="button" (click)="load()">Reintentar</button>
+    </div>
+  } @else if (items.length === 0) {
+    <div class="empty-state">
+      <i class="bi bi-heart"></i>
+      <h2>Tu lista está vacía</h2>
+      <p>Guarda servicios con el corazón y aparecerán aquí para comprarlos después.</p>
+      <a class="btn-gold" routerLink="/products">
+        <i class="bi bi-grid"></i> Ver servicios
+      </a>
+    </div>
+  } @else {
+    <div class="wishlist-grid">
+      @for (item of items; track item.productId) {
+        <article class="bo-card wishlist-card">
+          <a class="wishlist-cover" [routerLink]="['/products', item.productId]">
+            @if (item.images[0]) {
+              <img [src]="item.images[0]" [alt]="item.productName" />
+            } @else {
+              <div class="cover-empty"><i class="bi bi-image"></i></div>
+            }
+          </a>
+
+          <div class="wishlist-body">
+            <h2>
+              <a [routerLink]="['/products', item.productId]">{{ item.productName }}</a>
+            </h2>
+            <span class="wishlist-price">{{ item.price | currency: 'USD' }}</span>
+
+            <div class="wishlist-actions">
+              <button class="btn-gold" type="button" (click)="addToCart(item)">
+                <i class="bi bi-bag-plus"></i> Añadir
+              </button>
+              <button class="btn-ghost-danger" type="button" (click)="remove(item)">
+                <i class="bi bi-trash"></i> Quitar
+              </button>
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+  }
+</section>

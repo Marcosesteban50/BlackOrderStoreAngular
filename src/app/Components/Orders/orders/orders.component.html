@@ -1,0 +1,88 @@
+<section class="shop-page">
+  <header class="shop-header">
+    <div>
+      <span class="shop-eyebrow"><i class="bi bi-receipt"></i> Historial</span>
+      <h1 class="shop-title">Mis pedidos</h1>
+      <p class="shop-subtitle">Sigue el estado de tus servicios y su progreso.</p>
+    </div>
+
+    <a class="btn-outline" routerLink="/products">
+      <i class="bi bi-grid"></i> Comprar más
+    </a>
+  </header>
+
+  <div class="filter-row">
+    @for (option of statuses; track option.value) {
+      <button
+        class="filter-chip"
+        type="button"
+        [class.active]="status === option.value"
+        (click)="filterBy(option.value)"
+      >
+        {{ option.label }}
+      </button>
+    }
+  </div>
+
+  @if (loading) {
+    <div class="orders-list">
+      @for (placeholder of [1, 2, 3]; track placeholder) {
+        <div class="skeleton" style="height: 96px"></div>
+      }
+    </div>
+  } @else if (error) {
+    <div class="empty-state">
+      <i class="bi bi-exclamation-triangle"></i>
+      <h2>Algo salió mal</h2>
+      <p>{{ error }}</p>
+      <button class="btn-outline" type="button" (click)="load()">Reintentar</button>
+    </div>
+  } @else if (orders.length === 0) {
+    <div class="empty-state">
+      <i class="bi bi-receipt"></i>
+      <h2>Sin pedidos todavía</h2>
+      <p>Cuando compres un servicio aparecerá aquí con su estado.</p>
+      <a class="btn-gold" routerLink="/products">
+        <i class="bi bi-grid"></i> Ver servicios
+      </a>
+    </div>
+  } @else {
+    <div class="orders-list">
+      @for (order of orders; track order.id) {
+        <a class="bo-card order-card" [routerLink]="['/orders', order.id]">
+          <div class="order-main">
+            <div class="order-title">
+              <strong>#{{ order.id.slice(0, 8).toUpperCase() }}</strong>
+              <span>{{ order.createdAt | date: 'dd MMM yyyy, HH:mm' }}</span>
+            </div>
+
+            <div class="order-meta">
+              <span><i class="bi bi-box"></i> {{ order.itemCount }} artículo(s)</span>
+              <span><i class="bi bi-credit-card"></i> {{ order.paymentMethod }}</span>
+            </div>
+          </div>
+
+          <div class="order-right">
+            <span class="status-pill" [class]="statusClass(order.status)">
+              {{ statusLabel(order.status) }}
+            </span>
+            <strong class="order-total">{{ order.total | currency: 'USD' }}</strong>
+            <i class="bi bi-chevron-right"></i>
+          </div>
+        </a>
+      }
+    </div>
+
+    @if (totalPages > 1) {
+      <nav class="pagination" aria-label="Paginación de pedidos">
+        <button type="button" [disabled]="page === 1" (click)="goToPage(page - 1)">
+          <i class="bi bi-chevron-left"></i>
+        </button>
+        <span>Página {{ page }} de {{ totalPages }}</span>
+        <button type="button" [disabled]="page === totalPages" (click)="goToPage(page + 1)">
+          <i class="bi bi-chevron-right"></i>
+        </button>
+      </nav>
+    }
+  }
+</section>

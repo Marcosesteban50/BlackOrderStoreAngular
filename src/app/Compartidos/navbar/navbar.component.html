@@ -32,6 +32,13 @@
       <span>Wishlist</span>
     </a>
 
+    @if (securityService.isLoggedIn()) {
+      <a routerLink="/orders" class="nav-action">
+        <i class="bi bi-receipt"></i>
+        <span>Orders</span>
+      </a>
+    }
+
     <a routerLink="/cart" class="nav-action nav-cart-action">
       <i class="bi bi-cart"></i>
       <span>Cart</span>

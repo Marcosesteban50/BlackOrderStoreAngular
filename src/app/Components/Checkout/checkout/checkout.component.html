@@ -1,0 +1,151 @@
+<section class="shop-page">
+  <a class="shop-eyebrow" routerLink="/cart">
+    <i class="bi bi-arrow-left"></i> Volver al carrito
+  </a>
+
+  <header class="shop-header">
+    <div>
+      <h1 class="shop-title">Finalizar compra</h1>
+      <p class="shop-subtitle">
+        Cuéntanos tus datos de contacto y personaje. Coordinamos el pago y el inicio del servicio por Discord.
+      </p>
+    </div>
+  </header>
+
+  @if (loadingCart) {
+    <div class="checkout-layout">
+      <div class="skeleton" style="height: 420px"></div>
+      <div class="skeleton" style="height: 320px"></div>
+    </div>
+  } @else if (cartItems.length === 0) {
+    <div class="empty-state">
+      <i class="bi bi-bag-x"></i>
+      <h2>Tu carrito está vacío</h2>
+      <p>Añade un servicio antes de finalizar la compra.</p>
+      <a class="btn-gold" routerLink="/products">
+        <i class="bi bi-grid"></i> Ver servicios
+      </a>
+    </div>
+  } @else {
+    <div class="checkout-layout">
+      <form class="bo-card bo-card-pad checkout-form" [formGroup]="form" (ngSubmit)="submit()">
+        <h2>Datos de contacto</h2>
+
+        <div class="field-grid">
+          <label class="label-dark">
+            Nombre completo *
+            <input class="input-dark" type="text" formControlName="customerName" maxlength="150" placeholder="Tu nombre" />
+            @if (form.controls.customerName.touched && form.controls.customerName.invalid) {
+              <small class="field-error">El nombre es obligatorio.</small>
+            }
+          </label>
+
+          <label class="label-dark">
+            Email *
+            <input class="input-dark" type="email" formControlName="customerEmail" maxlength="256" placeholder="tu@email.com" />
+            @if (form.controls.customerEmail.touched && form.controls.customerEmail.invalid) {
+              <small class="field-error">Introduce un email válido.</small>
+            }
+          </label>
+
+          <label class="label-dark">
+            Discord
+            <input class="input-dark" type="text" formControlName="customerDiscord" maxlength="100" placeholder="usuario#0000" />
+          </label>
+
+          <label class="label-dark">
+            Personaje
+            <input class="input-dark" type="text" formControlName="characterName" maxlength="100" placeholder="Nombre del personaje" />
+          </label>
+
+          <label class="label-dark">
+            Reino
+            <input class="input-dark" type="text" formControlName="realm" maxlength="100" placeholder="Reino" />
+          </label>
+
+          <label class="label-dark">
+            Región
+            <select class="select-dark" formControlName="region">
+              @for (region of regions; track region) {
+                <option [value]="region">{{ region }}</option>
+              }
+            </select>
+          </label>
+        </div>
+
+        <label class="label-dark">
+          Notas para el equipo
+          <textarea class="textarea-dark" formControlName="notes" maxlength="1000" rows="3" placeholder="Horarios, requisitos o cualquier detalle útil"></textarea>
+        </label>
+
+        <div class="payment-block">
+          <h2>Método de pago</h2>
+
+          <label class="payment-option selected">
+            <input type="radio" name="payment" checked value="Manual" />
+            <div>
+              <strong>Coordinación manual</strong>
+              <span>Te enviamos los datos de pago y confirmamos el pedido por Discord.</span>
+            </div>
+            <i class="bi bi-shield-check"></i>
+          </label>
+
+          <label class="payment-option disabled">
+            <input type="radio" name="payment" disabled value="Stripe" />
+            <div>
+              <strong>Tarjeta (Stripe)</strong>
+              <span>Próximamente. Requiere configurar las claves de Stripe.</span>
+            </div>
+            <i class="bi bi-lock"></i>
+          </label>
+        </div>
+
+        @if (error) {
+          <div class="checkout-error"><i class="bi bi-exclamation-triangle"></i> {{ error }}</div>
+        }
+
+        <button class="btn-gold" type="submit" [disabled]="submitting">
+          @if (submitting) {
+            <span class="mini-spinner"></span> Creando pedido...
+          } @else {
+            <i class="bi bi-bag-check"></i> Confirmar pedido ({{ total | currency: 'USD' }})
+          }
+        </button>
+      </form>
+
+      <aside class="bo-card bo-card-pad summary">
+        <h2>Resumen</h2>
+
+        <div class="summary-items">
+          @for (item of cartItems; track item.productId) {
+            <div class="summary-item">
+              <div class="summary-thumb">
+                @if (item.images?.[0]) {
+                  <img [src]="item.images?.[0]" [alt]="item.name" />
+                } @else {
+                  <i class="bi bi-box"></i>
+                }
+              </div>
+              <div class="summary-info">
+                <strong>{{ item.name }}</strong>
+                <span>x{{ item.quantity }} · {{ item.price | currency: 'USD' }}</span>
+              </div>
+              <span class="summary-line">{{ item.subtotal | currency: 'USD' }}</span>
+            </div>
+          }
+        </div>
+
+        <div class="summary-total">
+          <span>Total</span>
+          <strong>{{ total | currency: 'USD' }}</strong>
+        </div>
+
+        <ul class="summary-notes">
+          <li><i class="bi bi-check2"></i> Soporte 24/7 vía Discord</li>
+          <li><i class="bi bi-check2"></i> Seguimiento del pedido en tu cuenta</li>
+          <li><i class="bi bi-check2"></i> Pago confirmado antes de iniciar</li>
+        </ul>
+      </aside>
+    </div>
+  }
+</section>

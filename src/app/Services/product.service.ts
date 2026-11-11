@@ -23,7 +23,7 @@ export class ProductService implements ICrudService<ProductDTO, ProductCreationD
 
   }
   getById(id: string): Observable<ProductDTO> {
-    throw new Error('Method not implemented.');
+    return this.http.get<ProductDTO>(`${this.urlBase}/${id}`);
   }
 
   filter(x: any): Observable<HttpResponse<ProductDTO[]>> {

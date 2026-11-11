@@ -11,6 +11,7 @@ import { EditProductComponent } from './Components/Products/edit-product/edit-pr
 import { FilterComponent } from './Components/Products/filter/filter.component';
 import { IndexProductComponent } from './Components/Products/index-product/index-product.component';
 import { AdminGuard } from './Compartidos/guards/admin.guard';
+import { AuthGuard } from './Compartidos/guards/auth.guard';
 import { UserListComponent } from './Components/Security/user-list/user-list.component';
 import { CartComponent } from './Components/Cart/cart/cart.component';
 
@@ -23,6 +24,14 @@ export const routes: Routes = [
   { path: 'products/new', component: CreateProductComponent },
   { path: 'products/update/:id', component: EditProductComponent },
   { path: 'products/filter', component: FilterComponent },
+
+  {
+    path: 'products/:id',
+    loadComponent: () =>
+      import('./Components/Products/product-detail/product-detail.component').then(
+        (m) => m.ProductDetailComponent
+      ),
+  },
 
   { path: 'categories', component: IndexCategoryComponent },
   {
@@ -41,6 +50,39 @@ export const routes: Routes = [
   { path: 'sign-in', component: SignInComponent },
 
   { path: 'cart', component: CartComponent },
+
+  {
+    path: 'checkout',
+    canActivate: [AuthGuard],
+    loadComponent: () =>
+      import('./Components/Checkout/checkout/checkout.component').then(
+        (m) => m.CheckoutComponent
+      ),
+  },
+  {
+    path: 'wishlist',
+    canActivate: [AuthGuard],
+    loadComponent: () =>
+      import('./Components/Wishlist/wishlist/wishlist.component').then(
+        (m) => m.WishlistComponent
+      ),
+  },
+  {
+    path: 'orders',
+    canActivate: [AuthGuard],
+    loadComponent: () =>
+      import('./Components/Orders/orders/orders.component').then(
+        (m) => m.OrdersComponent
+      ),
+  },
+  {
+    path: 'orders/:id',
+    canActivate: [AuthGuard],
+    loadComponent: () =>
+      import('./Components/Orders/order-detail/order-detail.component').then(
+        (m) => m.OrderDetailComponent
+      ),
+  },
 
   {
     path: 'guides',
@@ -89,5 +131,5 @@ export const routes: Routes = [
       ),
   },
 
-  { path: 'userList', component: UserListComponent },
+  { path: 'userList', component: UserListComponent, canActivate: [AdminGuard] },
 ];

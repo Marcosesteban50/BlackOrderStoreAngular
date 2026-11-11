@@ -1,8 +1,9 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CartService } from '../../../Services/cart.service';
 import { CartItemDTO } from '../../../Models/CartDTO/CartDTO';
+import { ToastService } from '../../../Services/toast.service';
 
 @Component({
   selector: 'app-cart',
@@ -17,6 +18,8 @@ export class CartComponent implements OnInit {
   error: string | null = null;
 
   cartService = inject(CartService);
+  private router = inject(Router);
+  private toast = inject(ToastService);
 
   ngOnInit(): void {
     this.loadCart();
@@ -89,12 +92,13 @@ export class CartComponent implements OnInit {
 
   checkout() {
     const token = localStorage.getItem('token');
+
     if (!token) {
-      alert('You must be logged in to proceed to checkout.');
+      this.toast.info('Inicia sesión para completar tu compra.');
+      this.router.navigate(['/sign-in'], { queryParams: { returnUrl: '/checkout' } });
       return;
     }
-    //   const direccion = this.perfilUsuario?.direccionEnvio;
-    // console.log('Perfil:', this.perfilUsuario);
-    // console.log('Dirección:', this.perfilUsuario?.direccionEnvio);
+
+    this.router.navigate(['/checkout']);
   }
 }

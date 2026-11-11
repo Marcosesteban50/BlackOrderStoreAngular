@@ -2,12 +2,13 @@ import { Component, HostListener } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavBarComponent } from './Compartidos/navbar/navbar.component';
 import { SideBarComponent } from './Compartidos/sidebar/sidebar.component';
+import { ToastContainerComponent } from './Compartidos/toast/toast-container.component';
 
 
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, SideBarComponent, NavBarComponent],
+  imports: [RouterOutlet, SideBarComponent, NavBarComponent, ToastContainerComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

@@ -1,0 +1,246 @@
+.order-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 26px;
+}
+
+.order-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.75fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.order-main,
+.order-side {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.order-main h2,
+.order-side h2 {
+  margin: 0 0 16px;
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 18px;
+}
+
+/* Timeline */
+.timeline {
+  display: flex;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.timeline-step {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  color: #6b7280;
+  font-size: 11.5px;
+  text-align: center;
+}
+
+.timeline-step::before {
+  position: absolute;
+  top: 17px;
+  right: 50%;
+  width: 100%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.08);
+  content: '';
+}
+
+.timeline-step:first-child::before {
+  display: none;
+}
+
+.timeline-step.done::before,
+.timeline-step.current::before {
+  background: rgba(245, 158, 11, 0.5);
+}
+
+.timeline-dot {
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  background: #05070a;
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.timeline-step.done .timeline-dot {
+  background: rgba(34, 197, 94, 0.12);
+  border-color: #22c55e;
+  color: #4ade80;
+}
+
+.timeline-step.current .timeline-dot {
+  background: rgba(245, 158, 11, 0.14);
+  border-color: #f59e0b;
+  color: #fbbf24;
+  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.12);
+}
+
+.timeline-step.done,
+.timeline-step.current {
+  color: #e5e7eb;
+}
+
+.cancelled-note {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 16px 0 0;
+  padding: 10px 12px;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: 10px;
+  color: #fca5a5;
+  font-size: 13px;
+}
+
+/* Items */
+.order-items {
+  padding: 20px 22px;
+}
+
+.order-item {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.order-item:last-of-type {
+  border-bottom: none;
+}
+
+.order-thumb {
+  display: grid;
+  flex: 0 0 46px;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  overflow: hidden;
+  background: #05070a;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 9px;
+  color: #6b7280;
+}
+
+.order-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.order-item-info {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.order-item-info strong {
+  font-size: 13.5px;
+}
+
+.order-item-info span {
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+.order-item-total {
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.order-total-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.order-total-row span {
+  color: #9ca3af;
+  font-size: 13px;
+}
+
+.order-total-row strong {
+  font-size: 24px;
+  font-weight: 800;
+}
+
+/* Side */
+.detail-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+}
+
+.detail-list div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.detail-list dt {
+  color: #6b7280;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.detail-list dd {
+  margin: 0;
+  font-size: 13.5px;
+  word-break: break-word;
+}
+
+.order-notes {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.order-notes strong {
+  font-size: 12px;
+}
+
+.order-notes p {
+  margin: 6px 0 0;
+  color: #9ca3af;
+  font-size: 13px;
+  line-height: 1.6;
+  white-space: pre-line;
+}
+
+@media (max-width: 900px) {
+  .order-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .timeline-step {
+    font-size: 10.5px;
+  }
+}

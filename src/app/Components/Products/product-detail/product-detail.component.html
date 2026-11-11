@@ -1,0 +1,262 @@
+<section class="detail-page">
+  <a class="back" routerLink="/products">
+    <i class="bi bi-arrow-left"></i> Volver a servicios
+  </a>
+
+  @if (loading) {
+    <div class="state">
+      <div class="spinner"></div>
+      <p>Cargando servicio...</p>
+    </div>
+  } @else if (error) {
+    <div class="state">
+      <i class="bi bi-exclamation-triangle"></i>
+      <h2>No pudimos abrir el servicio</h2>
+      <p>{{ error }}</p>
+      <a class="btn-secondary" routerLink="/products">Ver todos los servicios</a>
+    </div>
+  } @else if (product) {
+    <div class="product-layout">
+      <div class="gallery">
+        <div class="main-image">
+          @if (selectedImage) {
+            <img [src]="selectedImage" [alt]="product.name" />
+          } @else {
+            <div class="empty"><i class="bi bi-image"></i></div>
+          }
+        </div>
+
+        @if ((product.images?.length ?? 0) > 1) {
+          <div class="thumbnails">
+            @for (image of product.images; track image) {
+              <button
+                class="thumbnail"
+                type="button"
+                [class.active]="image === selectedImage"
+                (click)="selectImage(image)"
+                [attr.aria-label]="'Ver imagen de ' + product.name"
+              >
+                <img [src]="image" [alt]="product.name" />
+              </button>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="info">
+        @if (product.categoryName) {
+          <span class="category">
+            <i class="bi bi-tag"></i> {{ product.categoryName }}
+          </span>
+        }
+
+        <h1>{{ product.name }}</h1>
+
+        <div class="rating-row">
+          <span class="stars" aria-label="Calificación">
+            @for (star of stars; track star) {
+              <i
+                class="bi"
+                [class.bi-star-fill]="star <= (reviews?.averageRating ?? 0)"
+                [class.bi-star]="star > (reviews?.averageRating ?? 0)"
+                [class.off]="star > (reviews?.averageRating ?? 0)"
+              ></i>
+            }
+          </span>
+          <span>
+            @if ((reviews?.reviewCount ?? 0) > 0) {
+              {{ reviews?.averageRating | number: '1.1-1' }} · {{ reviews?.reviewCount }} reseñas
+            } @else {
+              Sin reseñas todavía
+            }
+          </span>
+        </div>
+
+        <div class="price-row">
+          <span class="price">
+            <span class="currency">$</span>{{ product.price | number: '1.2-2' }}
+          </span>
+
+          @if (availableStock <= 0) {
+            <span class="stock out"><i class="bi bi-x-circle"></i> Agotado</span>
+          } @else if (availableStock <= 5) {
+            <span class="stock low"><i class="bi bi-exclamation-circle"></i> Últimas {{ availableStock }} unidades</span>
+          } @else {
+            <span class="stock available"><i class="bi bi-check-circle"></i> Disponible</span>
+          }
+        </div>
+
+        @if (product.description) {
+          <p class="description">{{ product.description }}</p>
+        }
+
+        <div class="purchase">
+          <div class="quantity">
+            <button
+              type="button"
+              (click)="decrease()"
+              [disabled]="quantity <= 1 || !canBuy"
+              aria-label="Quitar una unidad"
+            >
+              <i class="bi bi-dash"></i>
+            </button>
+            <span>{{ quantity || 1 }}</span>
+            <button
+              type="button"
+              (click)="increase()"
+              [disabled]="quantity >= availableStock || !canBuy"
+              aria-label="Añadir una unidad"
+            >
+              <i class="bi bi-plus"></i>
+            </button>
+          </div>
+
+          <button
+            class="btn-primary"
+            type="button"
+            [disabled]="!canBuy || adding"
+            (click)="addToCart()"
+          >
+            @if (adding) {
+              <span class="spinner"></span> Añadiendo...
+            } @else {
+              <i class="bi bi-bag-plus"></i> Añadir al carrito
+            }
+          </button>
+
+          <button
+            class="btn-secondary"
+            type="button"
+            [disabled]="!canBuy"
+            (click)="buyNow()"
+          >
+            Comprar ahora
+          </button>
+
+          <button
+            class="btn-secondary"
+            type="button"
+            [class.active]="isFavorite"
+            (click)="toggleFavorite()"
+            [attr.aria-label]="isFavorite ? 'Quitar de deseos' : 'Añadir a deseos'"
+          >
+            <i class="bi" [class.bi-heart-fill]="isFavorite" [class.bi-heart]="!isFavorite"></i>
+          </button>
+        </div>
+
+        <div class="meta-list">
+          <div>
+            <span>Categoría</span>
+            <strong>{{ product.categoryName ?? 'General' }}</strong>
+          </div>
+          <div>
+            <span>Stock</span>
+            <strong>{{ availableStock }} unidades</strong>
+          </div>
+          <div>
+            <span>Estado</span>
+            <strong>{{ product.approved ? 'Verificado' : 'En revisión' }}</strong>
+          </div>
+          <div>
+            <span>Atención</span>
+            <strong>24/7 vía Discord</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section class="reviews-section">
+      <div class="reviews-header">
+        <h2>Reseñas</h2>
+        <span class="rating-row">
+          <span class="stars">
+            @for (star of stars; track star) {
+              <i
+                class="bi"
+                [class.bi-star-fill]="star <= (reviews?.averageRating ?? 0)"
+                [class.bi-star]="star > (reviews?.averageRating ?? 0)"
+                [class.off]="star > (reviews?.averageRating ?? 0)"
+              ></i>
+            }
+          </span>
+          <span>{{ reviews?.reviewCount ?? 0 }} en total</span>
+        </span>
+      </div>
+
+      @if (isLoggedIn) {
+        <div class="review-form">
+          <strong>Deja tu reseña</strong>
+
+          <div class="rating-picker" role="radiogroup" aria-label="Calificación">
+            @for (star of stars; track star) {
+              <button
+                type="button"
+                [class.on]="star <= reviewRating"
+                (click)="reviewRating = star"
+                [attr.aria-label]="star + ' estrellas'"
+              >
+                <i class="bi bi-star-fill"></i>
+              </button>
+            }
+          </div>
+
+          <textarea
+            [(ngModel)]="reviewComment"
+            maxlength="1000"
+            placeholder="Cuéntanos cómo fue tu experiencia con este servicio..."
+          ></textarea>
+
+          <div>
+            <button
+              class="btn-primary"
+              type="button"
+              [disabled]="submittingReview"
+              (click)="submitReview()"
+            >
+              @if (submittingReview) {
+                <span class="spinner"></span> Enviando...
+              } @else {
+                Publicar reseña
+              }
+            </button>
+          </div>
+        </div>
+      }
+
+      @if ((reviews?.items?.length ?? 0) === 0) {
+        <div class="empty-reviews">
+          Todavía no hay reseñas. Sé el primero en opinar.
+        </div>
+      } @else {
+        <div class="reviews-list">
+          @for (review of reviews?.items; track review.id) {
+            <article class="review">
+              <div class="review-head">
+                <div class="review-author">
+                  <span class="avatar">{{ review.userName.slice(0, 1).toUpperCase() }}</span>
+                  {{ review.userName }}
+                </div>
+                <span class="review-date">{{ review.createdAt | date: 'dd MMM yyyy' }}</span>
+              </div>
+
+              <div class="stars" style="margin-bottom: 8px">
+                @for (star of stars; track star) {
+                  <i
+                    class="bi"
+                    [class.bi-star-fill]="star <= review.rating"
+                    [class.bi-star]="star > review.rating"
+                    [class.off]="star > review.rating"
+                  ></i>
+                }
+              </div>
+
+              @if (review.comment) {
+                <p>{{ review.comment }}</p>
+              }
+            </article>
+          }
+        </div>
+      }
+    </section>
+  }
+</section>

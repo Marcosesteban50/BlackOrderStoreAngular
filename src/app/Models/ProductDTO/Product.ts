@@ -5,6 +5,7 @@ export interface ProductDTO{
   name: string;
   description?: string;
   price: number;
+  stock: number;
   images?: string[];
   categoryId?: string;
   categoryName?:string;
@@ -18,6 +19,7 @@ export interface ProductCreationDTO {
   name: string;
   description?: string;
   price: number;
+  stock: number;
   images?: File[];
   deletedImages?: string[];
   categoryId?: string;

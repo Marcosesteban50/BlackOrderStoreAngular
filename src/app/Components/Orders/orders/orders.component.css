@@ -1,0 +1,151 @@
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+
+.filter-chip {
+  padding: 8px 15px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  color: #9ca3af;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-chip:hover {
+  color: #f3f4f6;
+  border-color: rgba(245, 158, 11, 0.5);
+}
+
+.filter-chip.active {
+  background: rgba(245, 158, 11, 0.14);
+  border-color: #f59e0b;
+  color: #fbbf24;
+}
+
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.order-card {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  color: inherit;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.order-card:hover {
+  border-color: rgba(245, 158, 11, 0.45);
+  background: #141a23;
+  transform: translateY(-1px);
+}
+
+.order-main {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+
+.order-title {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: baseline;
+}
+
+.order-title strong {
+  font-size: 14.5px;
+  letter-spacing: 0.02em;
+}
+
+.order-title span {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.order-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  color: #9ca3af;
+  font-size: 12.5px;
+}
+
+.order-meta i {
+  margin-right: 4px;
+}
+
+.order-right {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.order-total {
+  font-size: 16px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.order-right > i {
+  color: #4b5563;
+  font-size: 13px;
+}
+
+.pagination {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 26px;
+  color: #9ca3af;
+  font-size: 13px;
+}
+
+.pagination button {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 9px;
+  color: #d1d5db;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pagination button:hover:not(:disabled) {
+  border-color: rgba(245, 158, 11, 0.5);
+  color: #fbbf24;
+}
+
+.pagination button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+@media (max-width: 640px) {
+  .order-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .order-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+}

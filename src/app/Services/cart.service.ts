@@ -4,14 +4,18 @@ import { environment } from '../../environments/environment';
 import { BehaviorSubject, map, of, tap } from 'rxjs';
 import { SecurityService } from './security.service';
 import { CartDTO, CartItemDTO } from '../Models/CartDTO/CartDTO';
+import { ProductDTO } from '../Models/ProductDTO/Product';
 
 type CartItemResponse = Partial<CartItemDTO> & {
   productoId?: string;
   amount?: number;
   imagenUrl?: string;
+  product?: ProductDTO;
 };
 
-type CartResponse = Partial<CartDTO> & {
+type CartResponse = {
+  id?: string;
+  total?: number;
   items?: CartItemResponse[];
 };
 
@@ -80,16 +84,17 @@ export class CartService {
 
   private normalizeCart(cart: CartResponse): CartDTO {
     const items: CartItemDTO[] = (cart.items ?? []).map((item) => {
-      const quantity = Number(item.quantity ?? item.quantity ?? 0);
-      const price = Number(item.price ?? 0);
+      const product = item.product;
+      const quantity = Number(item.quantity ?? item.amount ?? 0);
+      const price = Number(product?.price ?? item.price ?? 0);
 
       return {
-        productId: item.productId ?? item.productId ?? '',
-        name: item.name ?? '',
+        productId: item.productId ?? product?.id ?? '',
+        name: product?.name ?? item.name ?? '',
         price,
         quantity,
-        subtotal: Number(item.subtotal ?? price * quantity),
-        images: item.images ?? (item.images ? [item.images] : []),
+        subtotal: price * quantity,
+        images: product?.images ?? item.images ?? [],
       };
     });
 
@@ -148,7 +153,7 @@ export class CartService {
 
   deleteItem(productId: string) {
     if (this.securityService.isLoggedIn()) {
-      return this.http.delete(this.apiUrl + '/delete/' + productId).pipe(
+      return this.http.delete(this.apiUrl + '/RemoveItem/' + productId).pipe(
         tap(() => {
           this.updateQuantity();
         }),
@@ -170,7 +175,7 @@ export class CartService {
 
   deleteOneItem(productId: string) {
     if (this.securityService.isLoggedIn()) {
-      return this.http.delete(this.apiUrl + '/deleteOne/' + productId).pipe(
+      return this.http.delete(this.apiUrl + '/RemoveOneItem/' + productId).pipe(
         tap(() => {
           this.updateQuantity();
         }),
@@ -200,7 +205,7 @@ export class CartService {
 
   cleanCart() {
     if (this.securityService.isLoggedIn()) {
-      return this.http.delete(this.apiUrl + '/clean').pipe(
+      return this.http.delete(this.apiUrl + '/ClearCart').pipe(
         tap(() => {
           this.updateQuantity();
         }),
@@ -225,7 +230,7 @@ export class CartService {
       quantity: Number(item.quantity ?? item.amount ?? 0),
     }));
 
-    return this.http.post(this.apiUrl + '/sync', { items: itemsToSync }).pipe(
+    return this.http.post(this.apiUrl + '/SyncCart', itemsToSync).pipe(
       tap(() => {
         localStorage.removeItem(this.storageKey);
         this.updateQuantity();
