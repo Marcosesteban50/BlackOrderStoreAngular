@@ -1,0 +1,197 @@
+<section class="form-page">
+  <header class="form-header">
+    <a class="back" routerLink="/guides/manage">
+      <i class="bi bi-arrow-left"></i> Guías
+    </a>
+    <h1>{{ isEdit ? 'Editar guía' : 'Nueva guía' }}</h1>
+    <p>Los campos marcados con * son obligatorios.</p>
+  </header>
+
+  @if (loading) {
+    <div class="state">
+      <div class="spinner"></div>
+      <p>Cargando guía...</p>
+    </div>
+  } @else {
+    @if (error) {
+      <div class="alert">
+        <i class="bi bi-exclamation-triangle"></i> {{ error }}
+      </div>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="layout">
+        <div class="main-col">
+          <label class="field">
+            <span>Título *</span>
+            <input
+              type="text"
+              formControlName="title"
+              maxlength="200"
+              placeholder="Cómo subir del 1 al 80 en menos de 12 horas"
+            />
+            @if (form.controls.title.touched && form.controls.title.invalid) {
+              <small class="error-text">El título es obligatorio (máximo 200 caracteres).</small>
+            }
+          </label>
+
+          <label class="field">
+            <span>Resumen</span>
+            <textarea
+              formControlName="summary"
+              rows="3"
+              maxlength="500"
+              placeholder="Una o dos frases que expliquen de qué trata la guía"
+            ></textarea>
+            <small class="hint">{{ form.controls.summary.value.length }}/500</small>
+          </label>
+
+          <label class="field">
+            <span>Contenido (HTML) *</span>
+            <textarea
+              formControlName="contentHtml"
+              rows="16"
+              placeholder="<p>Texto de la guía...</p>"
+            ></textarea>
+            <small class="hint">
+              Acepta HTML básico: p, h2, h3, ul, ol, li, strong, a, blockquote.
+            </small>
+            @if (form.controls.contentHtml.touched && form.controls.contentHtml.invalid) {
+              <small class="error-text">El contenido es obligatorio.</small>
+            }
+          </label>
+
+          <fieldset class="video-box">
+            <legend><i class="bi bi-play-btn"></i> Video (opcional)</legend>
+
+            <label class="field">
+              <span>URL del video</span>
+              <input
+                type="url"
+                formControlName="videoUrl"
+                placeholder="https://www.youtube.com/watch?v=..."
+              />
+              <small class="hint">YouTube, Vimeo o cualquier enlace externo.</small>
+            </label>
+
+            <label class="field">
+              <span>Texto del video</span>
+              <input
+                type="text"
+                formControlName="videoCaption"
+                maxlength="300"
+                placeholder="Ruta de leveling en video"
+              />
+            </label>
+
+            @if (existingVideoUrl) {
+              <label class="check">
+                <input
+                  type="checkbox"
+                  formControlName="removeVideo"
+                  (change)="toggleRemoveVideo()"
+                />
+                <span>Quitar el video actual</span>
+              </label>
+            }
+          </fieldset>
+        </div>
+
+        <aside class="side-col">
+          <div class="panel">
+            <h2>Publicación</h2>
+
+            <label class="check">
+              <input type="checkbox" formControlName="isPublished" />
+              <span>Publicada (visible en /guides)</span>
+            </label>
+
+            <label class="field">
+              <span>Categoría</span>
+              <select formControlName="categoryId">
+                <option value="">Sin categoría</option>
+                @for (category of categories; track category.id) {
+                  <option [value]="category.id">{{ category.name }}</option>
+                }
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Nivel</span>
+              <select formControlName="level">
+                <option value="">Sin nivel</option>
+                @for (level of levels; track level) {
+                  <option [value]="level">{{ level }}</option>
+                }
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Expansión</span>
+              <input
+                type="text"
+                formControlName="expansion"
+                maxlength="50"
+                placeholder="The War Within"
+              />
+            </label>
+
+            <label class="field">
+              <span>Slug</span>
+              <input
+                type="text"
+                formControlName="slug"
+                maxlength="200"
+                placeholder="se genera del título"
+              />
+              <small class="hint">Déjalo vacío para generarlo automáticamente.</small>
+            </label>
+          </div>
+
+          <div class="panel">
+            <h2>Portada</h2>
+
+            <div class="cover-preview">
+              @if (coverPreview) {
+                <img [src]="coverPreview" alt="Vista previa de la portada" />
+              } @else if (existingCoverUrl && !form.controls.removeCover.value) {
+                <img [src]="existingCoverUrl" alt="Portada actual" />
+              } @else {
+                <div class="cover-empty">
+                  <i class="bi bi-image"></i>
+                  <span>Sin portada</span>
+                </div>
+              }
+            </div>
+
+            <input
+              class="file-input"
+              type="file"
+              accept="image/png,image/jpeg,image/webp"
+              (change)="onCoverSelected($event)"
+            />
+            <small class="hint">JPG, PNG o WebP. Máximo 5 MB.</small>
+
+            @if (coverFile || (existingCoverUrl && !form.controls.removeCover.value)) {
+              <button class="btn-ghost" type="button" (click)="clearCover()">
+                <i class="bi bi-trash"></i> Quitar portada
+              </button>
+            }
+          </div>
+        </aside>
+      </div>
+
+      <footer class="form-actions">
+        <a class="btn-ghost" routerLink="/guides/manage">Cancelar</a>
+        <button class="btn-primary" type="submit" [disabled]="saving">
+          @if (saving) {
+            <span class="mini-spinner"></span> Guardando...
+          } @else {
+            <i class="bi bi-check-lg"></i>
+            {{ isEdit ? 'Guardar cambios' : 'Crear guía' }}
+          }
+        </button>
+      </footer>
+    </form>
+  }
+</section>

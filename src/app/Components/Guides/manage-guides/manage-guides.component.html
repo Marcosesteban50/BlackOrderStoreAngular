@@ -1,0 +1,134 @@
+<section class="manage-page">
+  <header class="manage-header">
+    <div>
+      <a class="back" routerLink="/guides">
+        <i class="bi bi-arrow-left"></i> Ver página pública
+      </a>
+      <h1>Administrar guías</h1>
+      <p>Publica, edita y elimina guías y videos del módulo.</p>
+    </div>
+
+    <a class="btn-primary" routerLink="/guides/new">
+      <i class="bi bi-plus-lg"></i> Nueva guía
+    </a>
+  </header>
+
+  <div class="toolbar">
+    <div class="search-box">
+      <i class="bi bi-search"></i>
+      <input
+        type="search"
+        placeholder="Buscar por título..."
+        aria-label="Buscar guías"
+        [(ngModel)]="search"
+        (keyup.enter)="applySearch()"
+      />
+    </div>
+    <button class="btn-ghost" type="button" (click)="applySearch()">Buscar</button>
+    <span class="count">{{ totalCount }} en total</span>
+  </div>
+
+  @if (error) {
+    <div class="alert">
+      <i class="bi bi-exclamation-triangle"></i> {{ error }}
+    </div>
+  }
+
+  @if (loading) {
+    <div class="state">
+      <div class="spinner"></div>
+      <p>Cargando guías...</p>
+    </div>
+  } @else if (guides.length === 0) {
+    <div class="state">
+      <i class="bi bi-journal-plus"></i>
+      <p>Todavía no hay guías creadas.</p>
+      <a class="btn-primary" routerLink="/guides/new">Crear la primera</a>
+    </div>
+  } @else {
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Título</th>
+            <th>Categoría</th>
+            <th>Estado</th>
+            <th>Vistas</th>
+            <th>Publicada</th>
+            <th class="actions-col">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (guide of guides; track guide.id) {
+            <tr>
+              <td>
+                <div class="title-cell">
+                  <strong>{{ guide.title }}</strong>
+                  <span>/{{ guide.slug }}</span>
+                </div>
+              </td>
+              <td>{{ guide.categoryName ?? '—' }}</td>
+              <td>
+                <span class="status" [class.draft]="!guide.isPublished">
+                  {{ guide.isPublished ? 'Publicada' : 'Borrador' }}
+                </span>
+              </td>
+              <td>{{ guide.viewCount }}</td>
+              <td>
+                {{ guide.publishedAt ? (guide.publishedAt | date: 'dd MMM yyyy') : '—' }}
+              </td>
+              <td class="actions-col">
+                <a
+                  class="icon-btn"
+                  [routerLink]="['/guides/update', guide.id]"
+                  title="Editar"
+                  aria-label="Editar guía"
+                >
+                  <i class="bi bi-pencil"></i>
+                </a>
+                <button
+                  class="icon-btn danger"
+                  type="button"
+                  title="Eliminar"
+                  aria-label="Eliminar guía"
+                  [disabled]="deletingId === guide.id"
+                  (click)="remove(guide)"
+                >
+                  @if (deletingId === guide.id) {
+                    <span class="mini-spinner"></span>
+                  } @else {
+                    <i class="bi bi-trash"></i>
+                  }
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    @if (totalPages > 1) {
+      <nav class="pagination" aria-label="Paginación">
+        <button type="button" [disabled]="page === 1" (click)="goToPage(page - 1)">
+          <i class="bi bi-chevron-left"></i>
+        </button>
+        @for (pageNumber of pages(); track pageNumber) {
+          <button
+            type="button"
+            [class.active]="pageNumber === page"
+            (click)="goToPage(pageNumber)"
+          >
+            {{ pageNumber }}
+          </button>
+        }
+        <button
+          type="button"
+          [disabled]="page === totalPages"
+          (click)="goToPage(page + 1)"
+        >
+          <i class="bi bi-chevron-right"></i>
+        </button>
+      </nav>
+    }
+  }
+</section>

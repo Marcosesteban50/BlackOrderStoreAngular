@@ -9,11 +9,13 @@ export interface GuideSummary {
   level: string | null;
   expansion: string | null;
   publishedAt: string | null;
+  isPublished: boolean;
   viewCount: number;
 }
 
 export interface Guide extends GuideSummary {
   contentHtml: string;
+  categoryId: string | null;
   createdAt: string;
   updatedAt: string;
   media: GuideMedia[];

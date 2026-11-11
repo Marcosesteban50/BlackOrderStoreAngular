@@ -50,6 +50,30 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'guides/manage',
+    canActivate: [AdminGuard],
+    loadComponent: () =>
+      import('./Components/Guides/manage-guides/manage-guides.component').then(
+        (m) => m.ManageGuidesComponent
+      ),
+  },
+  {
+    path: 'guides/new',
+    canActivate: [AdminGuard],
+    loadComponent: () =>
+      import('./Components/Guides/guide-form/guide-form.component').then(
+        (m) => m.GuideFormComponent
+      ),
+  },
+  {
+    path: 'guides/update/:id',
+    canActivate: [AdminGuard],
+    loadComponent: () =>
+      import('./Components/Guides/guide-form/guide-form.component').then(
+        (m) => m.GuideFormComponent
+      ),
+  },
+  {
     path: 'guides/:slug',
     loadComponent: () =>
       import('./Components/Guides/guide-detail/guide-detail.component').then(

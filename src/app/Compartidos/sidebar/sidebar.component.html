@@ -152,6 +152,26 @@
             </a>
 
             <a
+              routerLink="/guides/manage"
+              routerLinkActive="active"
+              (click)="closeAdminMenu()">
+
+              <i class="bi bi-journal-text"></i>
+              <span>Guides</span>
+
+            </a>
+
+            <a
+              routerLink="/guides/new"
+              routerLinkActive="active"
+              (click)="closeAdminMenu()">
+
+              <i class="bi bi-plus-square"></i>
+              <span>New Guide</span>
+
+            </a>
+
+            <a
               routerLink="/products/new"
               routerLinkActive="active"
               (click)="closeAdminMenu()">
