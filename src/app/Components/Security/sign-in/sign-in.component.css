@@ -1,0 +1,58 @@
+/* Contenedor principal */
+.external-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  
+  /* Ancho máximo para que no se estiren demasiado en pantallas grandes */
+  width: 100%;
+  max-width: 360px; 
+  
+  /* Centrado en la pantalla (opcional, depende de dónde lo uses) */
+  margin: 0 auto;
+  padding: 24px 16px;
+  
+  /* Si quieres que parezca una tarjeta, descomenta esto: */
+  /*
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  border: 1px solid #eaeaea;
+  */
+}
+
+/* 
+  Forzamos a que los componentes hijos (app-google-login y app-discord-login) 
+  ocupen el 100% del ancho disponible.
+  Nota: Como Angular encapsula los estilos, si los botones no se estiran, 
+  quita la encapsulación (encapsulation: ViewEncapsulation.None) en esos componentes
+  o usa ::ng-deep (aunque es mejor evitar ::ng-deep).
+*/
+.external-container app-google-login,
+.external-container app-discord-login {
+  display: block;
+  width: 100%;
+}
+
+/* 
+  Alternativa moderna y segura en Angular para asegurar el ancho:
+  (Aplica esto si los componentes internos no toman el 100%)
+*/
+.external-container > div {
+  width: 100%;
+}
+
+/* 
+  Ajuste opcional para el margen inferior (si no quieres usar Bootstrap).
+  Si usas Bootstrap, la clase .mb-4 ya hace esto (1.5rem = 24px).
+*/
+.external-container .mb-4 {
+  width: 100%;
+  margin-bottom: 1.5rem !important; 
+}
+
+/* Quitar margen al último elemento para que quede simétrico */
+.external-container .mb-4:last-child {
+  margin-bottom: 0 !important;
+}

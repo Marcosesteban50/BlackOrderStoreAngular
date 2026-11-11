@@ -2,361 +2,300 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment.development';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
-import { AuthResponseDTO, UserCredentialsDTO, UserDTO, UserInfo } from '../Models/Security/securityDTO';
+import {
+  AuthResponseDTO,
+  UserCredentialsDTO,
+  UserDTO,
+  UserInfo,
+  GoogleLoginRequestDTO,
+  AuthResponseFullDTO,
+  ContactDTO
+} from '../Models/Security/securityDTO';
+import { UserProfileDTO } from '../Models/Security/profileDTO';
 
-
+type JwtPayload = {
+  email?: string;
+  nickName?: string;
+  nickname?: string;
+  userName?: string;
+  unique_name?: string;
+  Admin?: string;
+  Seller?: string;
+  Customer?: string;
+  [key: string]: unknown;
+};
 
 @Injectable({
   providedIn: 'root'
 })
 export class SecurityService {
 
-
-  // HttpClient used to communicate with the API
   private http = inject(HttpClient);
 
-  // Base URL for User endpoints
   private urlBase = environment.apiURL + '/User';
-
+  private urlBasePerfil = environment.apiURL + '/Profile';
 
   // LocalStorage keys
   private readonly tokenKey = 'token';
   private readonly expirationToken = 'token-expiration';
   private readonly userKey = 'user-info';
 
-
-  // Stores the current user state
+  // Current user state
   private userSubject = new BehaviorSubject<UserInfo | null>(null);
-
-  // Observable used by components to listen for user changes
   public user$ = this.userSubject.asObservable();
 
-
-  constructor() { }
-
-
-
-    getUsers(): Observable<UserDTO[]> {
-    return this.http.get<UserDTO[]>(`${this.urlBase}/userList`);
+  constructor() {
+    this.loadUserFromStorage();
   }
 
   // ==============================
-  // REGISTER
+  // PUBLIC API
   // ==============================
+  getUsers(): Observable<UserDTO[]> {
+    return this.http.get<UserDTO[]>(`${this.urlBase}/UserList`);
+  }
 
-  // Register a new user
+  sendEmail(contact: ContactDTO): Observable<any> {
+    return this.http.post(`${this.urlBase}/SendEmail`, contact);
+  }
+
   register(credentials: UserCredentialsDTO): Observable<AuthResponseDTO> {
-
-    // Send credentials to the API
     return this.http
-      .post<AuthResponseDTO>(
-        `${this.urlBase}/Sign-up`,
-        credentials
-      )
-
-      // Run extra logic after receiving the response
-      .pipe(
-
-        // Save the token returned by the API
-        tap(authenticationResponse =>
-          this.saveToken(authenticationResponse)
-        )
-      );
+      .post<AuthResponseDTO>(`${this.urlBase}/Sign-up`, credentials)
+      .pipe(tap(res => this.handleAuthResponse(res, credentials.nickName)));
   }
 
-
-
-  // ==============================
-  // LOGIN
-  // ==============================
-
-  // Login with email and password
   login(credentials: UserCredentialsDTO): Observable<AuthResponseDTO> {
-
-    // Send login credentials to the API
     return this.http
-      .post<AuthResponseDTO>(
-        `${this.urlBase}/Login`,
-        credentials
-      )
+      .post<AuthResponseDTO>(`${this.urlBase}/Login`, credentials)
+      .pipe(tap(res => this.handleAuthResponse(res)));
+  }
 
-      // Run extra logic after receiving the response
+  googleLogin(idToken: string): Observable<AuthResponseFullDTO> {
+    const request: GoogleLoginRequestDTO = { token: idToken };
+
+    return this.http
+      .post<AuthResponseFullDTO>(`${this.urlBase}/google-login`, request)
       .pipe(
-
-        // Save the token after successful login
-        tap(authenticationResponse =>
-          this.saveToken(authenticationResponse)
-        )
+        tap(res => {
+          this.saveToken({ token: res.token, expiration: res.expiration });
+          this.saveUserInfo(
+            res.usuario?.email ?? this.getEmail(),
+            res.usuario?.name,
+            res.usuario?.nickName,
+            res.usuario?.picture
+          );
+        })
       );
   }
 
-
-
   // ==============================
-  // TOKEN
+  // TOKEN MANAGEMENT
   // ==============================
-
-  // Get the JWT stored in LocalStorage
   getToken(): string | null {
-
-    // Returns the token or null if it does not exist
     return localStorage.getItem(this.tokenKey);
   }
 
+  saveToken(auth: { token: string; expiration: Date | string }): void {
+    localStorage.setItem(this.tokenKey, auth.token);
+    localStorage.setItem(this.expirationToken, auth.expiration.toString());
+  }
 
-
-  // Save JWT and expiration date
-  saveToken(authenticationResponse: AuthResponseDTO): void {
-
-    // Save JWT
-    localStorage.setItem(
-      this.tokenKey,
-      authenticationResponse.token
-    );
-
-    // Save token expiration date
-    localStorage.setItem(
-      this.expirationToken,
-      authenticationResponse.expiration.toString()
+  // ==============================
+  // AUTH RESPONSE HANDLING
+  // ==============================
+  private handleAuthResponse(res: AuthResponseDTO, nickName?: string): void {
+    this.saveToken(res);
+    this.saveUserInfo(
+      res.usuario?.email ?? this.getEmail(),
+      res.usuario?.name,
+      res.usuario?.nickName ?? nickName,
+      res.usuario?.picture
     );
   }
 
-
-
   // ==============================
-  // JWT CLAIMS
+  // USER INFO & STORAGE
   // ==============================
+  private saveUserInfo(email: string, name?: string, nickName?: string, picture?: string): void {
+    const tokenNickname = this.getNicknameFromToken();
+    const resolvedNickname = nickName || tokenNickname || email.split('@')[0];
+    const userInfo: UserInfo = {
+      email,
+      name: name || resolvedNickname,
+      nickName: resolvedNickname,
+      picture: picture ?? '',
+      roles: this.getRolesFromToken()
+    };
 
-  // Get a specific field from the JWT
-  getJWTField(field: string): string {
-
-    // Get token from LocalStorage
-    const token = localStorage.getItem(this.tokenKey);
-
-
-    // Stop if there is no token
-    if (!token) {
-      return '';
-    }
-
-
-    // JWT structure: header.payload.signature
-    // [1] gets the payload
-    // atob() decodes the Base64 payload
-    // JSON.parse() converts it into an object
-    const tokenData = JSON.parse(
-      atob(token.split('.')[1])
-    );
-
-
-    // Get the requested field from the payload
-    const value = tokenData[field];
-
-
-    // Return empty string if field does not exist
-    if (!value) {
-      return '';
-    }
-
-
-    // If requesting email, return only text before @
-    if (field === 'email') {
-
-      return value.split('@')[0];
-    }
-
-
-    // Return the complete field value
-    return value;
+    localStorage.setItem(this.userKey, JSON.stringify(userInfo));
+    this.userSubject.next(userInfo);
   }
 
+  private loadUserFromStorage(): void {
+    const userStr = localStorage.getItem(this.userKey);
+    if (!userStr) return;
 
-
-  // Get a JWT field without modifying its value
-  getJWTFieldForForm(field: string): string {
-
-    // Get token from LocalStorage
-    const token = localStorage.getItem(this.tokenKey);
-
-
-    // Stop if there is no token
-    if (!token) {
-      return '';
+    try {
+      const user = JSON.parse(userStr) as UserInfo;
+      this.userSubject.next(user);
+    } catch {
+      this.clearUserInfo();
     }
-
-
-    // Decode the JWT payload
-    const tokenData = JSON.parse(
-      atob(token.split('.')[1])
-    );
-
-
-    // Get the requested field
-    const value = tokenData[field];
-
-
-    // Return empty string if field does not exist
-    if (!value) {
-      return '';
-    }
-
-
-    // Return the complete email
-    if (field === 'email') {
-
-      return value;
-    }
-
-
-    // Return the complete field value
-    return value;
   }
 
-
+  private clearUserInfo(): void {
+    localStorage.removeItem(this.userKey);
+    this.userSubject.next(null);
+  }
 
   // ==============================
-  // EMAIL
+  // JWT DECODING HELPERS
   // ==============================
+  private decodeToken(): JwtPayload | null {
+    const token = this.getToken();
+    if (!token) return null;
 
-  // Get the logged user's complete email
+    const parts = token.split('.');
+    if (parts.length < 2) return null;
+
+    try {
+      return JSON.parse(atob(parts[1])) as JwtPayload;
+    } catch {
+      return null;
+    }
+  }
+
+  private getNicknameFromToken(): string | undefined {
+    const payload = this.decodeToken();
+    const nickname = payload?.nickName
+      ?? payload?.nickname
+      ?? payload?.userName
+      ?? payload?.unique_name;
+
+    return typeof nickname === 'string' ? nickname : undefined;
+  }
+
+  private getRolesFromToken(): string[] {
+    const payload = this.decodeToken();
+    if (!payload) return ['Customer'];
+
+    const roles: string[] = [];
+    if (payload.Admin === 'true') roles.push('Admin');
+    if (payload.Seller === 'true') roles.push('Seller');
+    if (payload.Customer === 'true') roles.push('Customer');
+
+    return roles.length > 0 ? roles : ['Customer'];
+  }
+
+  // ==============================
+  // PUBLIC GETTERS
+  // ==============================
+  getCurrentUser(): UserInfo | null {
+    return this.userSubject.value;
+  }
+
+  getUserPicture(): string {
+    const user = this.getCurrentUser();
+    if (!user?.picture) return '';
+    return user.picture.replace('=s96-c', '=s200');
+  }
+
+  getUserName(): string {
+    const user = this.getCurrentUser();
+    if (user?.name) return user.name;
+    return this.getEmail().split('@')[0] || 'User';
+  }
+
+  getUserNickname(): string {
+    const user = this.getCurrentUser();
+    if (user?.nickName) return user.nickName;
+    return this.getEmail().split('@')[0] || 'User';
+  }
+
   getEmail(): string {
-
-    // Get email from JWT or return "User"
-    return this.getJWTFieldForForm('email') || 'User';
+    const payload = this.decodeToken();
+    return payload?.email ?? '';
   }
 
-
+  getJWTField(field: string): string {
+    const payload = this.decodeToken();
+    const value = payload?.[field];
+    return typeof value === 'string' ? value : '';
+  }
 
   // ==============================
   // LOGIN STATUS
   // ==============================
-
-  // Check if the user is currently logged in
   isLoggedIn(): boolean {
+    const token = this.getToken();
+    if (!token) return false;
 
-    // Get JWT
-    const token = localStorage.getItem(this.tokenKey);
+    const expiration = localStorage.getItem(this.expirationToken);
+    if (!expiration) return false;
 
-
-    // No token = not logged in
-    if (!token) {
-      return false;
-    }
-
-
-    // Get expiration date
-    const expiration =
-      localStorage.getItem(this.expirationToken);
-
-
-    // No expiration = invalid login
-    if (!expiration) {
-      return false;
-    }
-
-
-    // Convert expiration string to Date
     const expirationDate = new Date(expiration);
-
-
-    // Check if token already expired
     if (expirationDate <= new Date()) {
-
-      // Clear login information
-      this.logout();
-
+      this.clearSession();
       return false;
     }
 
-
-    // Token exists and has not expired
     return true;
   }
-
-
- 
-
 
   // ==============================
   // LOGOUT
   // ==============================
-
-  // Logout the current user
   logout(): void {
+    this.clearSession();
 
-    // Remove JWT
+    if (typeof window !== 'undefined' && (window as any).google) {
+      (window as any).google.accounts.id.disableAutoSelect();
+    }
+  }
+
+  private clearSession(): void {
     localStorage.removeItem(this.tokenKey);
-
-    // Remove expiration date
     localStorage.removeItem(this.expirationToken);
-
-    // Remove stored user information
-    localStorage.removeItem(this.userKey);
-
-
-    // Tell subscribers there is no logged user
-    this.userSubject.next(null);
-
-
-    // Prevent Google from automatically selecting
-    // the previous account after logout
-    // if (typeof window.google !== 'undefined') {
-    //   window.google.accounts.id.disableAutoSelect();
-    // }
+    this.clearUserInfo();
   }
 
-
-
   // ==============================
-  // ROLES (RBAC: Admin, Booster, Client)
+  // ROLES
   // ==============================
+  getRoles(): string[] {
+    const user = this.getCurrentUser();
+    if (user?.roles?.length) return user.roles;
+    return this.getRolesFromToken();
+  }
 
-  // Get the logged user's role from the JWT or local state
+  hasRole(role: string): boolean {
+    return this.getRoles().includes(role);
+  }
+
   getRole(): string {
-    // Override manual para pruebas en modo desarrollo si existe
-    const demoRole = localStorage.getItem('blackorder_active_role');
-    if (demoRole) {
-      return demoRole;
-    }
-
-    // Leer claims estándar de JWT
-    const standardRole = this.getJWTField('role') || this.getJWTField('http://schemas.microsoft.com/ws/2008/06/identity/claims/role');
-    if (standardRole) {
-      return standardRole;
-    }
-
-    const admin = this.getJWTField('admin') || this.getJWTField('Admin');
-    if (admin) return 'Admin';
-
-    const booster = this.getJWTField('booster') || this.getJWTField('Booster');
-    if (booster) return 'Booster';
-
-    const client = this.getJWTField('client') || this.getJWTField('Client');
-    if (client) return 'Client';
-
-    // Por defecto en desarrollo para usuarios logueados o invitados
-    return this.isLoggedIn() ? 'Client' : 'Booster'; // Permite explorar Booster Hub en demo
+    const roles = this.getRoles();
+    if (roles.includes('Admin')) return 'Admin';
+    if (roles.includes('Seller')) return 'Seller';
+    if (roles.includes('Customer')) return 'Customer';
+    return '';
   }
 
-  isBooster(): boolean {
-    const role = this.getRole().toLowerCase();
-    return role === 'booster' || role === 'admin';
+  isAdmin(): boolean { return this.hasRole('Admin'); }
+  isSeller(): boolean { return this.hasRole('Seller'); }
+  isCustomer(): boolean { return this.hasRole('Customer'); }
+
+
+
+
+  getMyProfile(): Observable<UserProfileDTO> {
+    return this.http.get<UserProfileDTO>(`${this.urlBasePerfil}/GetMyProfile`);
   }
 
-  isAdmin(): boolean {
-    return this.getRole().toLowerCase() === 'admin';
+
+  updateProfile(profile: UserProfileDTO): Observable<UserProfileDTO> {
+    return this.http.put<UserProfileDTO>(`${this.urlBasePerfil}/UpdateProfile`, profile);
   }
 
-  isClient(): boolean {
-    return this.getRole().toLowerCase() === 'client';
-  }
 
-  // Permite al usuario conmutar entre Cliente y Booster en la UI con 1 clic
-  setRole(role: 'Admin' | 'Booster' | 'Client'): void {
-    localStorage.setItem('blackorder_active_role', role);
-  }
-
-  getDiscordTag(): string {
-    return this.getJWTField('DiscordTag') || localStorage.getItem('discord_tag') || '';
-  }
 }

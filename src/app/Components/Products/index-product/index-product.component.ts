@@ -31,8 +31,12 @@ export class IndexProductComponent implements OnInit {
 
 
   deleteProduct(id: string) {
+    console.log('Padre - ID recibido:', id);
     this.productService.delete(id).subscribe({
-      next: () => this.loadingProducts(),
+      next: () => {
+        console.log('Product Deleted:', id);
+        this.loadingProducts()
+      },
       error: (err) => console.log('Error at deleting', err)
     })
   }

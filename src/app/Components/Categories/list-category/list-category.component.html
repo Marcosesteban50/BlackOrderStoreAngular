@@ -26,9 +26,7 @@
 
                 <div class="category-overlay"></div>
 
-                <button class="wish-btn" aria-label="Add to wishlist" type="button">
-                    <i class="bi bi-heart"></i>
-                </button>
+
 
                 <span class="category-badge">
                     <i class="bi" [ngClass]="getCategoryIcon(x.name)"></i>
@@ -54,17 +52,26 @@
                         <i class="ti ti-arrow-right"></i>
                     </button>
 
-                    <div class="category-actions">
-                        <button class="btn-icon btn-update" [routerLink]="['/categories/update', x.id]"
-                            aria-label="Update category" type="button">
-                            <i class="ti ti-pencil"></i>
-                        </button>
 
-                        <button class="btn-icon btn-delete" (click)="delete(x.id)" aria-label="Delete category"
-                            type="button">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </div>
+                    <app-authorized>
+                        <ng-content authorized>
+                            <div class="category-actions">
+                                <button class="btn-icon btn-update" [routerLink]="['/categories/update', x.id]"
+                                    aria-label="Update category" type="button">
+                                    <i class="ti ti-pencil"></i>
+                                </button>
+
+                                <button class="btn-icon btn-delete" (click)="delete(x.id)" aria-label="Delete category"
+                                    type="button">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+
+                        </ng-content>
+
+
+                    </app-authorized>
+
 
                 </div>
             </div>

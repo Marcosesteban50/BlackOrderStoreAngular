@@ -1,84 +1,260 @@
-<aside class="sidebar" [class.collapsed]="ColpasedMenu">
+<aside class="sidebar" 
+  class="sidebar"
+  [class.collapsed]="menuCollapsed"
+  [class.mobile-open]="mobileMenuOpen">
 
-  <!-- SECCIÓN: CATEGORÍAS -->
+
+  
   <div class="sidebar-section">
-    <span class="section-title">Categories</span>
 
-    <nav class="sidebar-nav">
+    <span class="section-title">Black Order</span>
 
-      <a routerLink="/services" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+    <nav class="sidebar-nav" (click)="closeMenu()">
+
+
+      <a
+        routerLink="/services"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }">
         <i class="bi bi-house-door"></i>
         <span>Home</span>
       </a>
 
-      <a routerLink="/browse" routerLinkActive="active">
-        <i class="bi bi-compass"></i>
-        <span>Browse</span>
-      </a>
-
-      <a routerLink="/raids" routerLinkActive="active">
-        <i class="ti ti-swords"></i>
-        <span>Raids</span>
-      </a>
-
-      <a routerLink="/dungeons" routerLinkActive="active">
-        <i class="bi bi-shield-shaded"></i>
-        <span>Dungeons</span>
-      </a>
-
-      <a routerLink="/pvp" routerLinkActive="active">
-        <i class="bi bi-shield-fill-check"></i>
+      <a
+        [routerLink]="['/products/filter']"
+        [queryParams]="{ categoryId: 'E3015023-096E-489C-BC46-F8EDAF909BED' }"
+        routerLinkActive="active">
+        <i class="bi bi-shield-check"></i>
         <span>PvP</span>
+      </a>
+
+      <a
+        [routerLink]="['/products/filter']"
+        [queryParams]="{ categoryId: '2195A547-8CA6-4B40-B5A2-6B9652FDA053' }"
+        routerLinkActive="active">
+        <i class="bi bi-trophy-fill"></i>
+        <span>Achivements</span>
+      </a>
+
+      <a
+        [routerLink]="['/products/filter']"
+        [queryParams]="{ categoryId: '7863197F-EBD1-462D-A19B-70A2F6437745' }"
+        routerLinkActive="active">
+        <i class="bi bi-coin"></i>
+        <span>Gold</span>
+      </a>
+
+      <a
+        [routerLink]="['/products/filter']"
+        [queryParams]="{ categoryId: '7A910281-C058-483B-90B2-BF0E69C394C9' }"
+        routerLinkActive="active">
+        <i class="bi bi-shield-shaded"></i>
+        <span>Gear Up</span>
+      </a>
+
+      <a
+        [routerLink]="['/products/filter']"
+        [queryParams]="{ categoryId: '86D59768-BFE7-459A-BD89-C62A61C23DEA' }"
+        routerLinkActive="active">
+        <i class="bi bi-tools"></i>
+        <span>Professions</span>
+      </a>
+
+      <a
+        [routerLink]="['/products/filter']"
+        [queryParams]="{ categoryId: '8E5D1E38-3892-47C3-8D5D-66BA743E8585' }"
+        routerLinkActive="active">
+        <i class="bi bi-gem"></i>
+        <span>Collectibles</span>
+      </a>
+
+      <a
+        [routerLink]="['/products/filter']"
+        [queryParams]="{ categoryId: '96C3074E-5C14-4EE0-B91D-D7B1985ED94F' }"
+        routerLinkActive="active">
+        <i class="bi bi-key-fill"></i>
+        <span>M+</span>
+      </a>
+
+      <a
+        [routerLink]="['/products/filter']"
+        [queryParams]="{ categoryId: 'ADCE88CE-B23E-4F9E-868B-BE91EA7B9C32' }"
+        routerLinkActive="active">
+        <i class="bi bi-lightning-charge-fill"></i>
+        <span>Power Leveling</span>
+      </a>
+
+      <a
+        [routerLink]="['/products/filter']"
+        [queryParams]="{ categoryId: 'BC29A31B-79B1-477C-909D-2E96B10E7EA2' }"
+        routerLinkActive="active">
+        <i class="bi bi-hourglass-split"></i>
+        <span>Forever</span>
+      </a>
+
+      <a
+        [routerLink]="['/products/filter']"
+        [queryParams]="{ categoryId: 'EC984831-3BF3-4BE3-B6A9-B4788644A369' }"
+        routerLinkActive="active">
+        <i class="bi bi-gitlab"></i>
+        <span>Mount Farming</span>
       </a>
 
     </nav>
   </div>
 
-  <!-- SECCIÓN: ADMIN -->
+
+  <!--   ADMIN -->
+
   <app-authorize>
+
     <ng-content authorized>
+
       <div class="sidebar-section">
+
         <span class="section-title">Admin</span>
 
-        <div class="dropdown-item" [class.active]="dropdownOrdersOpen">
-          <button class="dropdown-btn" (click)="toggleDropdown('ordenes')">
+        <div
+          class="dropdown-item"
+          [class.active]="dropdownOrdersOpen">
+
+          <button
+            class="dropdown-btn"
+            (click)="toggleDropdown('ordenes')">
+
             <i class="bi bi-grid"></i>
+
             <span>Admin Panel</span>
+
             <i class="bi bi-chevron-down arrow"></i>
+
           </button>
 
-          <div class="dropdown-content" [class.open]="dropdownOrdersOpen">
-            <a routerLink="/categories" routerLinkActive="active" (click)="closeMenu(); closeAdminMenu();">
+          <div
+            class="dropdown-content"
+            [class.open]="dropdownOrdersOpen" (click)="closeMenu()">
+
+            <a
+              routerLink="/categories"
+              routerLinkActive="active"
+              (click)="closeAdminMenu()">
+
               <i class="bi bi-grid-fill"></i>
               <span>Categories</span>
+
             </a>
-            <a routerLink="/products/new" routerLinkActive="active" (click)="closeMenu(); closeAdminMenu();">
+
+            <a
+              routerLink="/products/new"
+              routerLinkActive="active"
+              (click)="closeAdminMenu()">
+
               <i class="bi bi-grid-fill"></i>
               <span>New Product</span>
+
             </a>
-            <a routerLink="/booster-hub" routerLinkActive="active">
+
+            <a
+              routerLink="/booster-hub"
+              routerLinkActive="active">
+
               <i class="bi bi-shield-shaded"></i>
               <span>Booster Hub</span>
+
             </a>
+
+
+            <a
+              routerLink="/userList"
+              routerLinkActive="active">
+
+              <i class="bi bi-people-fill"></i>
+              <span>User List</span>
+
+            </a>
+
           </div>
+
         </div>
+
       </div>
+
     </ng-content>
+
   </app-authorize>
 
-  <!-- SECCIÓN: CUENTA -->
-  <div class="sidebar-section sidebar-account">
-    <span class="section-title">Account</span>
 
-    <a routerLink="/orders" routerLinkActive="active">
-      <i class="bi bi-clipboard-check"></i>
-      <span>My Orders</span>
-    </a>
+  <!-- ACCIONES -->
 
-    <a routerLink="/wishlist" routerLinkActive="active">
+  <div class="navbar-actions" (click)="closeMenu()">
+
+    <a routerLink="/wishlist" class="nav-action">
       <i class="bi bi-heart"></i>
       <span>Wishlist</span>
     </a>
+
+    <a routerLink="/cart" class="nav-action">
+      <i class="bi bi-cart"></i>
+      <span>Cart</span>
+    </a>
+
+    <a routerLink="/support" class="nav-action">
+      <i class="bi bi-headset"></i>
+      <span>Support</span>
+    </a>
+
+
+    @if (securityService.isLoggedIn()) {
+
+      <div class="user-menu">
+
+        <div class="avatar">
+
+          <img
+            src="https://i.pravatar.cc/40?img=12"
+            alt="User">
+
+          <span class="status"></span>
+
+        </div>
+
+        <div class="user-info">
+
+          <span class="user-name">
+            BlackOrder
+          </span>
+
+          <span class="user-status">
+            Online
+          </span>
+
+        </div>
+
+        <button
+          class="logout-btn"
+          (click)="securityService.logout()"
+          title="Logout">
+
+          <i class="bi bi-box-arrow-right"></i>
+
+        </button>
+
+      </div>
+
+    } @else {
+
+      <a
+        routerLink="/sign-in"
+        class="nav-action">
+
+        <i class="bi bi-person"></i>
+
+        <span>Sign In</span>
+
+      </a>
+
+    }
+
   </div>
 
 </aside>

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
@@ -21,16 +21,19 @@ import { AuthorizeComponent } from '../authorize/authorize.component';
     RouterLinkActive,
     MatSliderModule,
     AuthorizeComponent
-  ],
+],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css'
 })
 export class SideBarComponent implements OnInit {
 
   securityService = inject(SecurityService);
+    @Input() menuCollapsed = false;
+     @Input() mobileMenuOpen = false;
+  @Output() closeMobileMenu = new EventEmitter<void>();
+
 
   ActiveSearch = false;
-  ColpasedMenu = false;
 
   // ESTADOS DROPDOWN
   dropdownOrdersOpen = false;
@@ -55,17 +58,15 @@ export class SideBarComponent implements OnInit {
   }
 
   closeMenu(): void {
-    if (window.innerWidth <= 1100) {
-      this.ColpasedMenu = true;
-    }
+    this.closeMobileMenu.emit();
   }
 
-  toggleMenu(): void {
-    this.ColpasedMenu = !this.ColpasedMenu;
-  }
 
   toggleBusqueda(): void {
     this.ActiveSearch = !this.ActiveSearch;
   }
+
+
+  
 
 }

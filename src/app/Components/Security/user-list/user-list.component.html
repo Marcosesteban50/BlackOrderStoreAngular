@@ -1,0 +1,65 @@
+<main class="container mt-4">
+  <h1 class="text-center mb-4">User Management</h1>
+
+  @if (loading) {
+    <p class="text-center" role="status">Loading users...</p>
+  } @else if (error) {
+    <div class="text-danger text-center" role="alert">
+      <p>{{ error }}</p>
+      <button class="btn btn-outline-secondary" type="button" (click)="loadUsers()">
+        Try again
+      </button>
+    </div>
+  } @else {
+    <section class="mb-5" aria-labelledby="admins-heading">
+      <h2 id="admins-heading" class="text-center mb-4">Administrators</h2>
+      <div class="row">
+        @for (user of admins; track user.email) {
+          <div class="col-md-4 mb-4">
+            <article class="card h-100 shadow-sm">
+              <div class="card-body">
+                <h3 class="card-title h5 admin-email">{{ user.email }}</h3>
+              </div>
+            </article>
+          </div>
+        } @empty {
+          <p class="text-center text-muted">No administrators found.</p>
+        }
+      </div>
+    </section>
+
+    <section class="mb-5" aria-labelledby="sellers-heading">
+      <h2 id="sellers-heading" class="text-center mb-4">Sellers</h2>
+      <div class="row">
+        @for (user of sellers; track user.email) {
+          <div class="col-md-4 mb-4">
+            <article class="card h-100 shadow-sm">
+              <div class="card-body">
+                <h3 class="card-title h5 seller-email">{{ user.email }}</h3>
+              </div>
+            </article>
+          </div>
+        } @empty {
+          <p class="text-center text-muted">No sellers found.</p>
+        }
+      </div>
+    </section>
+
+    <section class="mb-5" aria-labelledby="customers-heading">
+      <h2 id="customers-heading" class="text-center mb-4">Customers</h2>
+      <div class="row">
+        @for (user of customers; track user.email) {
+          <div class="col-md-4 mb-4">
+            <article class="card h-100 shadow-sm">
+              <div class="card-body">
+                <h3 class="card-title h5 customer-email">{{ user.email }}</h3>
+              </div>
+            </article>
+          </div>
+        } @empty {
+          <p class="text-center text-muted">No customers found.</p>
+        }
+      </div>
+    </section>
+  }
+</main>

@@ -1,0 +1,46 @@
+:host {
+  display: inline-block;
+}
+
+.discord-login {
+  display: flex;
+  justify-content: center;
+}
+
+.discord-login__button {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  color: #f5f1e9;
+  background: linear-gradient(135deg, #191919, #101010);
+  border: 1px solid rgba(131, 150, 212, 0.55);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.discord-login__button:hover:not(:disabled) {
+  border-color: #8399d4;
+  transform: translateY(-2px);
+}
+
+.discord-login__button:focus-visible {
+  outline: 3px solid rgba(131, 169, 212, 0.55);
+  outline-offset: 3px;
+}
+
+.discord-login__button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.discord-icon {
+  font-size: 22px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .discord-login__button {
+    transition: none;
+  }
+}

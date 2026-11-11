@@ -1,3 +1,14 @@
-<h2>Sign In</h2>
-
 <app-authentication-sign-in-form [errors]="errors" (submitForm)="login($event)"></app-authentication-sign-in-form>
+
+
+
+<div class="external-container">
+
+    <div class="mb-4">
+        <app-google-login></app-google-login>
+    </div>
+
+    <div class="mb-4">
+        <app-discord-login></app-discord-login>
+    </div>
+</div>

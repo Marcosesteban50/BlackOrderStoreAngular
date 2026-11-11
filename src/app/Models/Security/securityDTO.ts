@@ -4,6 +4,9 @@ export interface UserCredentialsDTO {
     // User email
     email: string;
 
+    //Nick Name
+    nickName: string;
+
     // User password
     password: string;
 }
@@ -29,6 +32,8 @@ export interface AuthResponseDTO {
 
         // User profile picture
         picture: string;
+
+        nickName: string;
     };
 }
 
@@ -55,6 +60,9 @@ export interface UserDTO {
 
     // User email
     email: string;
+
+    // User nickname
+    nickName: string;
 
     // User roles
     roles?: string[];
@@ -85,6 +93,9 @@ export interface AuthResponseFullDTO extends AuthResponseDTO {
         // User name
         name: string;
 
+        // User nickname
+        nickName: string;
+
         // Google profile picture
         picture: string;
 
@@ -103,8 +114,12 @@ export interface UserInfo {
     // User name
     name: string;
 
+    // Nick Name
+    nickName: string;
+
     // User profile picture
     picture: string;
+
 
     // User roles
     roles: string[];

@@ -1,31 +1,40 @@
+
 .layout {
-  display: grid;
-  grid-template-columns: 240px 1fr;
-  grid-template-rows: 70px 1fr;
-  grid-template-areas:
-    "sidebar navbar"
-    "sidebar main";
   min-height: 100vh;
   background: #000;
-  transition: grid-template-columns .25s;
-}
-.layout.collapsed { grid-template-columns: 72px 1fr }
-
-app-navbar  { grid-area: navbar }
-app-sidebar { grid-area: sidebar }
-
-.main-content {
-  grid-area: main;
-  background: #000;
-  padding: 24px;
-  min-height: 0;
-  overflow-y: auto;
+  padding-left: 260px;
 }
 
-app-navbar,
+
+.layout.collapsed {
+  padding-left: 2px;
+}
+
+
+@media (max-width: 900px) {
+  .layout,
+  .layout.collapsed {
+    padding-left: 0;
+  }
+}
+
+app-navbar {
+  display: block;
+  width: 100%;
+  height: 70px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
 app-sidebar {
   display: block;
-  min-width: 0;
-  min-height: 0;
+  width: 0;
+  height: 0;
 }
 
+.main-content {
+  background: #000;
+  padding: 24px;
+  min-height: calc(100vh - 70px);
+  overflow-y: auto;
+}

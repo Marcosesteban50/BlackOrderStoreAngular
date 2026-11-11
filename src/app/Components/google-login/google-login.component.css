@@ -1,0 +1,81 @@
+.google-login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    min-width: 0;
+}
+
+.google-official-btn {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    min-height: 44px;
+    border-radius: 6px;
+    transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+
+
+
+
+
+.error-message {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    box-sizing: border-box;
+    background: #fff1f0;
+    color: #cf1322;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    border: 1px solid #ffa39e;
+    max-width: 350px;
+    width: 100%;
+}
+
+.error-icon {
+    flex: 0 0 auto;
+    font-weight: bold;
+}
+
+.retry-btn {
+    margin-left: auto;
+    padding: 0.25rem 0;
+    background: transparent;
+    border: none;
+    color: #cf1322;
+    font-weight: 600;
+    cursor: pointer;
+    font: inherit;
+    white-space: nowrap;
+}
+
+.retry-btn:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+    border-radius: 2px;
+}
+
+.retry-btn:hover {
+    text-decoration: underline;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .google-official-btn {
+        transition: none;
+    }
+
+    .google-official-btn:hover,
+    .google-official-btn:active {
+        transform: none;
+    }
+}
+
+
+
+
+

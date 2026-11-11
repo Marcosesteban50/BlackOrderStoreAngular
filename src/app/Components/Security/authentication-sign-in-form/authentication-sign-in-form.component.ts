@@ -4,11 +4,12 @@ import { UserCredentialsDTO } from '../../../Models/Security/securityDTO';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { RouterLink } from '@angular/router';
 
 
 @Component({
   selector: 'app-authentication-sign-in-form',
-  imports: [ReactiveFormsModule, MatFormFieldModule, MatButtonModule, MatInputModule],
+  imports: [ReactiveFormsModule, MatFormFieldModule, MatButtonModule, MatInputModule,RouterLink],
   templateUrl: './authentication-sign-in-form.component.html',
   styleUrl: './authentication-sign-in-form.component.css'
 })

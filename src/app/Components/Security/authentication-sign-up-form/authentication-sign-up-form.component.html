@@ -17,6 +17,12 @@
         <mat-error>{{ getEmailErrors() }}</mat-error>
     </mat-form-field>
 
+    <mat-form-field appearance="outline">
+        <mat-label>Nick Name</mat-label>
+        <input matInput [formControl]="form.controls.nickName">
+        <mat-error>{{ getNickNameErrors() }}</mat-error>
+    </mat-form-field>
+
 
     <mat-form-field appearance="outline">
         <mat-label>Password</mat-label>
@@ -26,7 +32,14 @@
 
 
     <div class="button-container">
-              <button mat-flat-button type="submit" [disabled]="form.invalid">Sign Up</button>
+        <button mat-flat-button type="submit" [disabled]="form.invalid">Enter</button>
+    </div>
+
+    <div class="sign-in-link">
+        <a routerLink="/sign-in">Sign In</a>
     </div>
 
 </form>
+
+
+

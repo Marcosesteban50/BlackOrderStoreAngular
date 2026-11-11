@@ -10,28 +10,37 @@ import { CreateProductComponent } from './Components/Products/create-product/cre
 import { EditProductComponent } from './Components/Products/edit-product/edit-product.component';
 import { FilterComponent } from './Components/Products/filter/filter.component';
 import { IndexProductComponent } from './Components/Products/index-product/index-product.component';
-
+import { AdminGuard } from './Compartidos/guards/admin.guard';
+import { UserListComponent } from './Components/Security/user-list/user-list.component';
+import { CartComponent } from './Components/Cart/cart/cart.component';
 
 export const routes: Routes = [
-    { path: '', component: LandingComponent },
-    { path: 'services', component: LandingComponent },
+  { path: '', component: LandingComponent },
+  { path: 'services', component: LandingComponent },
 
+  // Rutas heredadas
+  { path: 'products', component: IndexProductComponent },
+  { path: 'products/new', component: CreateProductComponent },
+  { path: 'products/update/:id', component: EditProductComponent },
+  { path: 'products/filter', component: FilterComponent },
 
-    // Rutas heredadas
-    { path: 'products', component: IndexProductComponent },
-    { path: 'products/new', component: CreateProductComponent },
-    { path: 'products/update/:id', component: EditProductComponent },
-    { path: 'products/filter', component: FilterComponent },
+  { path: 'categories', component: IndexCategoryComponent },
+  {
+    path: 'categories/new',
+    component: CreateCategoryComponent,
+    canActivate: [AdminGuard],
+  },
+  {
+    path: 'categories/update/:id',
+    component: EditCategoryComponent,
+    canActivate: [AdminGuard],
+  },
 
+  // Auth
+  { path: 'sign-up', component: SignUpComponent },
+  { path: 'sign-in', component: SignInComponent },
 
+  { path: 'cart', component: CartComponent },
 
-    { path: 'categories', component: IndexCategoryComponent },
-    { path: 'categories/new', component: CreateCategoryComponent },
-    { path: 'categories/update/:id', component: EditCategoryComponent },
-
-    // Auth
-    { path: 'sign-up', component: SignUpComponent },
-    { path: 'sign-in', component: SignInComponent },
-
+  { path: 'userList', component: UserListComponent },
 ];
-

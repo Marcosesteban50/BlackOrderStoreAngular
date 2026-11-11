@@ -4,12 +4,15 @@ import { Router, RouterLink } from '@angular/router';
 import { ProductDTO } from '../../../Models/ProductDTO/Product';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { NgClass } from '@angular/common';
+import { AuthorizedComponent } from '../../Security/authorized/authorized.component';
+import { c } from '../../../../../node_modules/@angular/cdk/a11y-module.d-DBHGyKoh';
+
 
 
 
 @Component({
   selector: 'app-list-category',
-  imports: [RouterLink, ReactiveFormsModule, NgClass],
+  imports: [RouterLink, ReactiveFormsModule, NgClass, AuthorizedComponent],
   templateUrl: './list-category.component.html',
   styleUrl: './list-category.component.css'
 })

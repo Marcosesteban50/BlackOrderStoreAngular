@@ -1,0 +1,12 @@
+<div class="google-login-container">
+  <!-- Google renderiza aquí su botón oficial -->
+  <div #googleButton class="google-official-btn"></div>
+
+  @if (error) {
+    <div class="error-message" role="alert" aria-live="polite">
+      <i class="error-icon" aria-hidden="true">!</i>  
+      <span>{{ error }}</span>
+      <button type="button" class="retry-btn" (click)="retry()">Retry</button>
+    </div>
+  }
+</div>

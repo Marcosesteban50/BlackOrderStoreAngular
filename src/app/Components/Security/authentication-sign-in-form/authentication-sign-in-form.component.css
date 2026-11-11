@@ -18,6 +18,32 @@ form {
 }
 
 
+.sign-up-link a{
+    display: block;
+    width: 100%;
+    padding: 14px 0;
+    margin-top: 10px;
+    text-align: center;
+
+    background-color: #292a2e;
+    color: #8793a5;
+
+    border: none;
+    border-radius: 11px;
+
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.sign-up-link:hover a{
+    background-color: #333438;
+    color: #a0aec0;
+}
+
 /* =========================
    MATERIAL FIELDS
 ========================= */

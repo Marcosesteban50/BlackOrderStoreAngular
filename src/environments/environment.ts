@@ -2,5 +2,6 @@ export const environment = {
 
     production: true,
     
-    apiURL: ''
+    apiURL: '',
+    googleClientId:''
 };

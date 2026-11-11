@@ -1,6 +1,12 @@
 <div class="layout" [class.collapsed]="menuCollapsed">
-  <app-navbar></app-navbar>
-  <app-sidebar></app-sidebar>
+  <app-navbar (toggleSidebar)="toggleMenu()"></app-navbar>
+
+  <app-sidebar
+    [menuCollapsed]="menuCollapsed"
+    [mobileMenuOpen]="mobileMenuOpen"
+    (closeMobileMenu)="closeMobileMenu()">
+  </app-sidebar>
+
   <main class="main-content">
     <router-outlet></router-outlet>
   </main>

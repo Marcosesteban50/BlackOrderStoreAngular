@@ -1,0 +1,140 @@
+<main class="cart-page">
+  <header class="cart-header">
+    <div>
+      <span class="section-label">
+        <i class="ti ti-shopping-cart"></i>
+        YOUR ORDER
+      </span>
+      <h1>Your Cart</h1>
+      <p>Review your selected services before checkout.</p>
+    </div>
+
+    @if (cart.length > 0) {
+      <button class="cart-clear-button" type="button" (click)="cleanCart()">
+        <i class="bi bi-trash"></i>
+        Clear cart
+      </button>
+    }
+  </header>
+
+  @if (loading) {
+    <section class="cart-empty" aria-live="polite">
+      <p>Loading your cart...</p>
+    </section>
+  } @else if (error) {
+    <section class="cart-empty" role="alert">
+      <h2>Unable to load your cart</h2>
+      <p>{{ error }}</p>
+      <button class="cart-continue-button" type="button" (click)="loadCart()">
+        Try again
+      </button>
+    </section>
+  } @else if (cart.length === 0) {
+    <section class="cart-empty" aria-live="polite">
+      <i class="bi bi-cart3 cart-empty-icon" aria-hidden="true"></i>
+      <h2>Your cart is empty</h2>
+      <p>Browse our services and add something to your order.</p>
+      <a class="cart-continue-button" routerLink="/products">
+        Browse services
+        <i class="ti ti-arrow-right"></i>
+      </a>
+    </section>
+  } @else {
+    <div class="cart-layout">
+      <section class="cart-items" aria-label="Items in your cart">
+        <div class="cart-items-heading">
+          <h2>Selected services</h2>
+          <span>{{ itemCount }} {{ itemCount === 1 ? "item" : "items" }}</span>
+        </div>
+
+        @for (item of cart; track item.productId) {
+          <article class="cart-item">
+            <div class="cart-item-image">
+              @if (item.images?.[0]) {
+                <img
+                  [src]="item.images"
+                  [alt]="item.name || 'Cart item image'"
+                />
+              } @else {
+                <i class="ti ti-sword" aria-hidden="true"></i>
+              }
+            </div>
+
+            <div class="cart-item-details">
+              <h3>{{ item.name || "Selected service" }}</h3>
+              <p>
+                <span class="cart-unit-price">{{ item.price | currency }}</span>
+                <span>per service</span>
+              </p>
+            </div>
+
+            <div
+              class="cart-quantity"
+              [attr.aria-label]="'Quantity: ' + item.quantity"
+            >
+              <button
+                type="button"
+                class="quantity-button"
+                (click)="reduceQuantity(item.productId)"
+                [attr.aria-label]="'Remove one ' + (item.name || 'service')"
+              >
+                <i class="bi bi-dash"></i>
+              </button>
+              <span>{{ item.quantity }}</span>
+              <button
+                type="button"
+                class="quantity-button"
+                (click)="addQuantity(item.productId)"
+                [attr.aria-label]="'Add one ' + (item.name || 'service')"
+              >
+                <i class="bi bi-plus"></i>
+              </button>
+            </div>
+
+            <div class="cart-item-subtotal">
+              <span class="cart-subtotal-label">Subtotal</span>
+              <strong>{{ item.subtotal | currency }}</strong>
+            </div>
+
+            <button
+              type="button"
+              class="cart-remove-button"
+              (click)="delete(item.productId)"
+              [attr.aria-label]="
+                'Remove ' + (item.name || 'service') + ' from cart'
+              "
+              title="Remove item"
+            >
+              <i class="bi bi-trash"></i>
+            </button>
+          </article>
+        }
+
+        <a class="cart-back-link" routerLink="/products">
+          <i class="ti ti-arrow-left"></i>
+          Continue shopping
+        </a>
+      </section>
+
+      <aside class="cart-summary" aria-label="Order summary">
+        <h2>Order summary</h2>
+        <div class="cart-summary-row">
+          <span>Items</span>
+          <span>{{ itemCount }}</span>
+        </div>
+        <div class="cart-summary-total">
+          <span>Total</span>
+          <strong>{{ total | currency }}</strong>
+        </div>
+        <button class="cart-checkout-button" type="button" (click)="checkout()">
+          Proceed to checkout
+          <i class="ti ti-arrow-right"></i>
+        </button>
+        <p class="cart-secure-note">
+          <i class="bi bi-shield-check"></i>
+          Secure checkout
+        </p>
+      </aside>
+    </div>
+  }
+</main>

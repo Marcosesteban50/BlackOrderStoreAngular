@@ -17,14 +17,27 @@
   <!-- ACCIONES -->
   <div class="navbar-actions">
 
+<button
+  type="button"
+  class="menu-toggle"
+  aria-label="Alternar menú"
+  (click)="onToggleSidebar()">
+  <i class="bi bi-list"></i>
+</button>
+
+
+
     <a routerLink="/wishlist" class="nav-action">
       <i class="bi bi-heart"></i>
       <span>Wishlist</span>
     </a>
 
-    <a routerLink="/cart" class="nav-action">
+    <a routerLink="/cart" class="nav-action nav-cart-action">
       <i class="bi bi-cart"></i>
       <span>Cart</span>
+      <span class="cart-count" [hidden]="(cartAmount$ | async) === 0">
+        {{ (cartAmount$ | async) ?? 0 }}
+      </span>
     </a>
 
     <a routerLink="/support" class="nav-action">
@@ -33,24 +46,26 @@
     </a>
 
     @if (securityService.isLoggedIn()) {
-      <div class="user-menu">
-        <div class="avatar">
-          <img src="https://i.pravatar.cc/40?img=12" alt="User" />
-          <span class="status"></span>
-        </div>
-        <div class="user-info">
-          <span class="user-name">BlackOrder</span>
-          <span class="user-status">Online</span>
-        </div>
-        <button class="logout-btn" (click)="securityService.logout()" title="Logout">
-          <i class="bi bi-box-arrow-right"></i>
-        </button>
+    <div class="user-menu">
+      <div class="avatar">
+        <img [src]="securityService.getUserPicture() || 'https://i.pravatar.cc/40?img=12'"
+          [alt]="'Foto de perfil de ' + securityService.getUserNickname()" class="foto-perfil-header"
+          referrerpolicy="no-referrer" />
+        <span class="status"></span>
       </div>
+      <div class="user-info">
+        <span class="user-name">{{ securityService.getUserNickname() }}</span>
+        <span class="user-status">Online</span>
+      </div>
+      <button class="logout-btn" (click)="logout()" title="Logout">
+        <i class="bi bi-box-arrow-right"></i>
+      </button>
+    </div>
     } @else {
-      <a routerLink="/sign-in" class="nav-action">
-        <i class="bi bi-person"></i>
-        <span>Sign In</span>
-      </a>
+    <a routerLink="/sign-in" class="nav-action">
+      <i class="bi bi-person"></i>
+      <span>Sign In</span>
+    </a>
     }
 
   </div>
