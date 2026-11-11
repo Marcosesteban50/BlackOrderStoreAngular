@@ -1,0 +1,170 @@
+<section class="shop-page">
+  <header class="shop-header">
+    <div>
+      <span class="shop-eyebrow"><i class="bi bi-speedometer2"></i> Administración</span>
+      <h1 class="shop-title">Panel de control</h1>
+      <p class="shop-subtitle">Ventas, pedidos y catálogo en un vistazo.</p>
+    </div>
+
+    <div class="admin-actions">
+      <a class="btn-outline" routerLink="/admin/orders">
+        <i class="bi bi-receipt"></i> Pedidos
+      </a>
+      <a class="btn-outline" routerLink="/guides/manage">
+        <i class="bi bi-journal-text"></i> Guías
+      </a>
+      <a class="btn-gold" routerLink="/products/new">
+        <i class="bi bi-plus-lg"></i> Nuevo servicio
+      </a>
+    </div>
+  </header>
+
+  @if (loading) {
+    <div class="kpi-grid">
+      @for (placeholder of [1, 2, 3, 4, 5, 6]; track placeholder) {
+        <div class="skeleton" style="height: 96px"></div>
+      }
+    </div>
+  } @else if (error) {
+    <div class="empty-state">
+      <i class="bi bi-exclamation-triangle"></i>
+      <h2>Algo salió mal</h2>
+      <p>{{ error }}</p>
+      <button class="btn-outline" type="button" (click)="load()">Reintentar</button>
+    </div>
+  } @else if (dashboard) {
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <span><i class="bi bi-cash-stack"></i> Ingresos</span>
+        <strong>{{ dashboard.totalRevenue | currency: 'USD' }}</strong>
+      </div>
+      <div class="kpi-card">
+        <span><i class="bi bi-receipt"></i> Pedidos</span>
+        <strong>{{ dashboard.ordersTotal }}</strong>
+      </div>
+      <div class="kpi-card">
+        <span><i class="bi bi-calendar-day"></i> Hoy</span>
+        <strong>{{ dashboard.ordersToday }}</strong>
+      </div>
+      <div class="kpi-card">
+        <span><i class="bi bi-hourglass-split"></i> Por cobrar</span>
+        <strong>{{ dashboard.pendingOrders }}</strong>
+      </div>
+      <div class="kpi-card">
+        <span><i class="bi bi-people"></i> Clientes</span>
+        <strong>{{ dashboard.customers }}</strong>
+      </div>
+      <div class="kpi-card">
+        <span><i class="bi bi-box-seam"></i> Stock bajo</span>
+        <strong>{{ dashboard.lowStockProducts }}</strong>
+      </div>
+    </div>
+
+    <div class="admin-grid">
+      <div class="bo-card">
+        <div class="card-head">
+          <h2>Pedidos recientes</h2>
+          <a routerLink="/admin/orders">Ver todos <i class="bi bi-arrow-right"></i></a>
+        </div>
+
+        @if (dashboard.recentOrders.length === 0) {
+          <p class="card-empty">Todavía no hay pedidos.</p>
+        } @else {
+          <div class="table-dark" style="border: none">
+            <table>
+              <thead>
+                <tr>
+                  <th>Pedido</th>
+                  <th>Fecha</th>
+                  <th>Estado</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (order of dashboard.recentOrders; track order.id) {
+                  <tr>
+                    <td>#{{ order.id.slice(0, 8).toUpperCase() }}</td>
+                    <td>{{ order.createdAt | date: 'dd MMM, HH:mm' }}</td>
+                    <td>
+                      <span class="status-pill" [class]="statusClass(order.status)">
+                        {{ statusLabel(order.status) }}
+                      </span>
+                    </td>
+                    <td>{{ order.total | currency: 'USD' }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </div>
+
+      <div class="bo-card">
+        <div class="card-head">
+          <h2>Top servicios</h2>
+        </div>
+
+        @if (dashboard.topProducts.length === 0) {
+          <p class="card-empty">Sin ventas pagadas todavía.</p>
+        } @else {
+          <ol class="top-list">
+            @for (product of dashboard.topProducts; track product.productName) {
+              <li>
+                <span>{{ product.productName }}</span>
+                <strong>{{ product.unitsSold }} u · {{ product.revenue | currency: 'USD' }}</strong>
+              </li>
+            }
+          </ol>
+        }
+      </div>
+    </div>
+
+    <div class="bo-card pending-card">
+      <div class="card-head">
+        <h2>Servicios pendientes de aprobación ({{ dashboard.pendingProducts }})</h2>
+      </div>
+
+      @if (pending.length === 0) {
+        <p class="card-empty">No hay servicios pendientes. Todo al día.</p>
+      } @else {
+        <div class="pending-grid">
+          @for (product of pending; track product.id) {
+            <article class="pending-item">
+              <div class="pending-thumb">
+                @if (product.images?.[0]) {
+                  <img [src]="product.images?.[0] ?? ''" [alt]="product.name" />
+                } @else {
+                  <i class="bi bi-box"></i>
+                }
+              </div>
+
+              <div class="pending-info">
+                <strong>{{ product.name }}</strong>
+                <span>{{ product.categoryName ?? 'Sin categoría' }} · {{ product.price | currency: 'USD' }}</span>
+              </div>
+
+              <div class="pending-actions">
+                <button
+                  class="btn-gold"
+                  type="button"
+                  [disabled]="busyId === product.id"
+                  (click)="approve(product)"
+                >
+                  Aprobar
+                </button>
+                <button
+                  class="btn-ghost-danger"
+                  type="button"
+                  [disabled]="busyId === product.id"
+                  (click)="reject(product)"
+                >
+                  Rechazar
+                </button>
+              </div>
+            </article>
+          }
+        </div>
+      }
+    </div>
+  }
+</section>

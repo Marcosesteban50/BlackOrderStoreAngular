@@ -1,0 +1,55 @@
+.support-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+}
+
+.support-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.support-card > i {
+  color: #f59e0b;
+  font-size: 26px;
+}
+
+.support-card h2 {
+  margin: 0;
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 19px;
+}
+
+.support-card p {
+  flex: 1;
+  margin: 0 0 6px;
+  color: #9ca3af;
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+
+.support-note {
+  margin-top: 18px;
+}
+
+.support-note h2 {
+  margin: 0 0 10px;
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 18px;
+}
+
+.support-note ul {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin: 0;
+  padding-left: 18px;
+  color: #9ca3af;
+  font-size: 13.5px;
+}
+
+.support-note strong {
+  color: #f3f4f6;
+}

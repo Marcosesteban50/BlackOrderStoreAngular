@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { ProductCreationDTO, ProductDTO } from '../../../Models/ProductDTO/Product';
 import { ProductService } from '../../../Services/product.service';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -17,7 +17,7 @@ import { MatSelectModule } from '@angular/material/select';
   templateUrl: './product-form.component.html',
   styleUrl: './product-form.component.css'
 })
-export class ProductFormComponent implements OnInit {
+export class ProductFormComponent implements OnInit, OnChanges {
 
 
   ngOnInit(): void {
@@ -43,13 +43,28 @@ export class ProductFormComponent implements OnInit {
 
   form = this.fb.group({
     name: ['', { validators: [Validators.required] }],
-    description: ['', { validators: [Validators.required, Validators.maxLength(50)] }],
-    price: [0, { validators: [Validators.required] }],
+    description: ['', { validators: [Validators.required, Validators.maxLength(100)] }],
+    price: [0, { validators: [Validators.required, Validators.min(0)] }],
+    stock: [100, { validators: [Validators.required, Validators.min(0)] }],
     images: new FormControl<File[]>([]),
     categoryId: ['', [Validators.required]]
 
 
   });
+
+  ngOnChanges(): void {
+    if (!this.model) {
+      return;
+    }
+
+    this.form.patchValue({
+      name: this.model.name,
+      description: this.model.description ?? '',
+      price: this.model.price,
+      stock: this.model.stock,
+      categoryId: this.model.categoryId ?? '',
+    });
+  }
 
 
 

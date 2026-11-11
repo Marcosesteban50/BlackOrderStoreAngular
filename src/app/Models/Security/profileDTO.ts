@@ -3,4 +3,5 @@ export interface UserProfileDTO {
   phone: string;
   email: string;
   name: string;
+  nickName: string;
 }

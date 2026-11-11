@@ -142,6 +142,26 @@
             [class.open]="dropdownOrdersOpen" (click)="closeMenu()">
 
             <a
+              routerLink="/admin"
+              routerLinkActive="active"
+              (click)="closeAdminMenu()">
+
+              <i class="bi bi-speedometer2"></i>
+              <span>Dashboard</span>
+
+            </a>
+
+            <a
+              routerLink="/admin/orders"
+              routerLinkActive="active"
+              (click)="closeAdminMenu()">
+
+              <i class="bi bi-receipt"></i>
+              <span>Orders</span>
+
+            </a>
+
+            <a
               routerLink="/categories"
               routerLinkActive="active"
               (click)="closeAdminMenu()">
@@ -192,11 +212,12 @@
             </a>
 
             <a
-              routerLink="/booster-hub"
-              routerLinkActive="active">
+              routerLink="/seller"
+              routerLinkActive="active"
+              (click)="closeAdminMenu()">
 
-              <i class="bi bi-shield-shaded"></i>
-              <span>Booster Hub</span>
+              <i class="bi bi-shop"></i>
+              <span>Seller Hub</span>
 
             </a>
 
@@ -228,6 +249,11 @@
     <a routerLink="/wishlist" class="nav-action">
       <i class="bi bi-heart"></i>
       <span>Wishlist</span>
+    </a>
+
+    <a routerLink="/profile" class="nav-action">
+      <i class="bi bi-person"></i>
+      <span>Profile</span>
     </a>
 
     <a routerLink="/cart" class="nav-action">

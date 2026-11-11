@@ -1,0 +1,120 @@
+<section class="shop-page">
+  <header class="shop-header">
+    <div>
+      <a class="shop-eyebrow" routerLink="/admin">
+        <i class="bi bi-arrow-left"></i> Panel
+      </a>
+      <h1 class="shop-title">Pedidos</h1>
+      <p class="shop-subtitle">Gestiona el estado de cada pedido y su pago.</p>
+    </div>
+  </header>
+
+  <div class="admin-toolbar">
+    <div class="filter-row">
+      @for (option of statuses; track option.value) {
+        <button
+          class="filter-chip"
+          type="button"
+          [class.active]="status === option.value"
+          (click)="filterBy(option.value)"
+        >
+          {{ option.label }}
+        </button>
+      }
+    </div>
+
+    <div class="search-inline">
+      <input
+        class="input-dark"
+        type="search"
+        placeholder="Buscar por cliente, email o ID..."
+        [(ngModel)]="search"
+        (keyup.enter)="applySearch()"
+      />
+      <button class="btn-outline" type="button" (click)="applySearch()">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </div>
+
+  @if (loading) {
+    <div class="skeleton" style="height: 320px"></div>
+  } @else if (error) {
+    <div class="empty-state">
+      <i class="bi bi-exclamation-triangle"></i>
+      <h2>Algo salió mal</h2>
+      <p>{{ error }}</p>
+      <button class="btn-outline" type="button" (click)="load()">Reintentar</button>
+    </div>
+  } @else if (orders.length === 0) {
+    <div class="empty-state">
+      <i class="bi bi-receipt"></i>
+      <h2>Sin pedidos</h2>
+      <p>No hay pedidos con estos filtros.</p>
+    </div>
+  } @else {
+    <div class="table-dark">
+      <table>
+        <thead>
+          <tr>
+            <th>Pedido</th>
+            <th>Cliente</th>
+            <th>Fecha</th>
+            <th>Artículos</th>
+            <th>Total</th>
+            <th>Estado</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (order of orders; track order.id) {
+            <tr>
+              <td>
+                <a class="order-id" [routerLink]="['/orders', order.id]">
+                  #{{ order.id.slice(0, 8).toUpperCase() }}
+                </a>
+              </td>
+              <td>{{ order.customerName }}</td>
+              <td>{{ order.createdAt | date: 'dd MMM, HH:mm' }}</td>
+              <td>{{ order.itemCount }}</td>
+              <td>{{ order.total | currency: 'USD' }}</td>
+              <td>
+                <span class="status-pill" [class]="statusClass(order.status)">
+                  {{ statusLabel(order.status) }}
+                </span>
+              </td>
+              <td>
+                @if (nextStatuses(order.status).length === 0) {
+                  <span class="no-actions">—</span>
+                } @else {
+                  <select
+                    class="select-dark status-select"
+                    [disabled]="busyId === order.id"
+                    (change)="updateStatus(order, $any($event.target).value)"
+                  >
+                    <option value="">Cambiar a...</option>
+                    @for (next of nextStatuses(order.status); track next) {
+                      <option [value]="next">{{ statusLabel(next) }}</option>
+                    }
+                  </select>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    @if (totalPages > 1) {
+      <nav class="pagination" aria-label="Paginación">
+        <button type="button" [disabled]="page === 1" (click)="goToPage(page - 1)">
+          <i class="bi bi-chevron-left"></i>
+        </button>
+        <span>Página {{ page }} de {{ totalPages }}</span>
+        <button type="button" [disabled]="page === totalPages" (click)="goToPage(page + 1)">
+          <i class="bi bi-chevron-right"></i>
+        </button>
+      </nav>
+    }
+  }
+</section>

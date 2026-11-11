@@ -1,0 +1,75 @@
+<section class="shop-page">
+  <header class="shop-header">
+    <div>
+      <span class="shop-eyebrow"><i class="bi bi-person-badge"></i> Cuenta</span>
+      <h1 class="shop-title">Mi perfil</h1>
+      <p class="shop-subtitle">Datos de contacto usados en tus pedidos.</p>
+    </div>
+  </header>
+
+  @if (loading) {
+    <div class="skeleton" style="height: 380px"></div>
+  } @else {
+    <div class="profile-layout">
+      <aside class="bo-card bo-card-pad profile-summary">
+        <div class="profile-avatar">{{ initials }}</div>
+        <strong>{{ form.controls.name.value || 'Jugador' }}</strong>
+        <span>{{ email }}</span>
+
+        <a class="btn-outline" routerLink="/orders">
+          <i class="bi bi-receipt"></i> Mis pedidos
+        </a>
+        <a class="btn-outline" routerLink="/wishlist">
+          <i class="bi bi-heart"></i> Lista de deseos
+        </a>
+      </aside>
+
+      <form class="bo-card bo-card-pad profile-form" [formGroup]="form" (ngSubmit)="save()">
+        <h2>Datos personales</h2>
+
+        @if (error) {
+          <div class="profile-error"><i class="bi bi-exclamation-triangle"></i> {{ error }}</div>
+        }
+
+        <label class="label-dark">
+          Nombre completo *
+          <input class="input-dark" type="text" formControlName="name" maxlength="100" />
+          @if (form.controls.name.touched && form.controls.name.invalid) {
+            <small class="field-error">El nombre es obligatorio.</small>
+          }
+        </label>
+
+        <label class="label-dark">
+          Nickname
+          <input class="input-dark" type="text" formControlName="nickName" maxlength="100" />
+        </label>
+
+        <label class="label-dark">
+          Email
+          <input class="input-dark" type="email" [value]="email" disabled />
+          <small style="color: #6b7280; font-weight: 400">El email de acceso no se puede cambiar aquí.</small>
+        </label>
+
+        <label class="label-dark">
+          Dirección / Discord
+          <input class="input-dark" type="text" formControlName="address" maxlength="200" placeholder="Calle, ciudad o tu Discord" />
+        </label>
+
+        <label class="label-dark">
+          Teléfono
+          <input class="input-dark" type="text" formControlName="phone" maxlength="20" />
+        </label>
+
+        <div class="profile-actions">
+          <button class="btn-gold" type="submit" [disabled]="saving">
+            @if (saving) {
+              <span class="mini-spinner"></span> Guardando...
+            } @else {
+              <i class="bi bi-check2"></i> Guardar cambios
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+</section>

@@ -22,6 +22,10 @@ export class ProductService implements ICrudService<ProductDTO, ProductCreationD
     return this.http.get<ProductDTO[]>(`${this.urlBase}/GetProducts`)
 
   }
+
+  mine(): Observable<ProductDTO[]> {
+    return this.http.get<ProductDTO[]>(`${this.urlBase}/Mine`);
+  }
   getById(id: string): Observable<ProductDTO> {
     return this.http.get<ProductDTO>(`${this.urlBase}/${id}`);
   }
@@ -54,6 +58,7 @@ export class ProductService implements ICrudService<ProductDTO, ProductCreationD
     formData.append('name', product.name);
     if (product.description) formData.append('description', product.description);
     formData.append('price', product.price.toString());
+    formData.append('stock', (product.stock ?? 0).toString());
 
     // NEW IMAGES
     if (product.images) {

@@ -289,12 +289,12 @@ export class SecurityService {
 
 
   getMyProfile(): Observable<UserProfileDTO> {
-    return this.http.get<UserProfileDTO>(`${this.urlBasePerfil}/GetMyProfile`);
+    return this.http.get<UserProfileDTO>(`${this.urlBasePerfil}/Get-Profile`);
   }
 
 
   updateProfile(profile: UserProfileDTO): Observable<UserProfileDTO> {
-    return this.http.put<UserProfileDTO>(`${this.urlBasePerfil}/UpdateProfile`, profile);
+    return this.http.put<UserProfileDTO>(`${this.urlBasePerfil}/Update-Profile`, profile);
   }
 
 

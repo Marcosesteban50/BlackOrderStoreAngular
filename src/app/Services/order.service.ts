@@ -60,6 +60,8 @@ export class OrderService {
       status: order.status,
       paymentStatus: order.paymentStatus,
       paymentMethod: order.paymentMethod,
+      customerName: order.customerName,
+      customerEmail: order.customerEmail,
       total: order.total,
       itemCount: order.items.length,
       createdAt: order.createdAt,

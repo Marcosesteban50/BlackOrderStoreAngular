@@ -3,6 +3,8 @@ export interface OrderSummary {
   status: string;
   paymentStatus: string;
   paymentMethod: string;
+  customerName: string;
+  customerEmail: string;
   total: number;
   itemCount: number;
   createdAt: string;

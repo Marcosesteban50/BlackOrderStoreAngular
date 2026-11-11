@@ -12,6 +12,8 @@ import { FilterComponent } from './Components/Products/filter/filter.component';
 import { IndexProductComponent } from './Components/Products/index-product/index-product.component';
 import { AdminGuard } from './Compartidos/guards/admin.guard';
 import { AuthGuard } from './Compartidos/guards/auth.guard';
+import { SellerGuard } from './Compartidos/guards/seller.guard';
+import { SupportComponent } from './Components/Support/support/support.component';
 import { UserListComponent } from './Components/Security/user-list/user-list.component';
 import { CartComponent } from './Components/Cart/cart/cart.component';
 
@@ -21,8 +23,12 @@ export const routes: Routes = [
 
   // Rutas heredadas
   { path: 'products', component: IndexProductComponent },
-  { path: 'products/new', component: CreateProductComponent },
-  { path: 'products/update/:id', component: EditProductComponent },
+  { path: 'products/new', component: CreateProductComponent, canActivate: [SellerGuard] },
+  {
+    path: 'products/update/:id',
+    component: EditProductComponent,
+    canActivate: [SellerGuard],
+  },
   { path: 'products/filter', component: FilterComponent },
 
   {
@@ -130,6 +136,40 @@ export const routes: Routes = [
         (m) => m.GuideDetailComponent
       ),
   },
+
+  {
+    path: 'profile',
+    canActivate: [AuthGuard],
+    loadComponent: () =>
+      import('./Components/Profile/profile/profile.component').then(
+        (m) => m.ProfileComponent
+      ),
+  },
+  {
+    path: 'seller',
+    canActivate: [SellerGuard],
+    loadComponent: () =>
+      import('./Components/Seller/seller/seller.component').then(
+        (m) => m.SellerComponent
+      ),
+  },
+  {
+    path: 'admin',
+    canActivate: [AdminGuard],
+    loadComponent: () =>
+      import('./Components/Admin/admin-dashboard/admin-dashboard.component').then(
+        (m) => m.AdminDashboardComponent
+      ),
+  },
+  {
+    path: 'admin/orders',
+    canActivate: [AdminGuard],
+    loadComponent: () =>
+      import('./Components/Admin/admin-orders/admin-orders.component').then(
+        (m) => m.AdminOrdersComponent
+      ),
+  },
+  { path: 'support', component: SupportComponent },
 
   { path: 'userList', component: UserListComponent, canActivate: [AdminGuard] },
 ];

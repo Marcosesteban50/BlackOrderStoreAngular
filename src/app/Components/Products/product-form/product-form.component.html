@@ -17,7 +17,7 @@
         <mat-error>Description is required</mat-error>
         }
         @if (form.controls.description.hasError('maxlength')) {
-        <mat-error>Max 50 characters</mat-error>
+        <mat-error>Max 100 characters</mat-error>
         }
     </mat-form-field>
 
@@ -27,6 +27,18 @@
         <input matInput type="number" [formControl]="form.controls.price">
         @if (form.controls.price.hasError('required')) {
         <mat-error>Price is required</mat-error>
+        }
+    </mat-form-field>
+
+    <!-- Stock -->
+    <mat-form-field appearance="outline">
+        <mat-label>Stock</mat-label>
+        <input matInput type="number" [formControl]="form.controls.stock">
+        @if (form.controls.stock.hasError('required')) {
+        <mat-error>Stock is required</mat-error>
+        }
+        @if (form.controls.stock.hasError('min')) {
+        <mat-error>Stock cannot be negative</mat-error>
         }
     </mat-form-field>
 

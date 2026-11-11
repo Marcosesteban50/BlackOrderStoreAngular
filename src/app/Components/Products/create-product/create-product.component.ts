@@ -20,7 +20,7 @@ export class CreateProductComponent {
   saveChanges(product: ProductCreationDTO) {
     this.ProductService.create(product).subscribe({
       next: () => {
-        this.router.navigate(['/services'])
+        this.router.navigate(['/seller'])
       },
       error: (err) => {
         this.errors = err;

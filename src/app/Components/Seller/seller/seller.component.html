@@ -1,0 +1,83 @@
+<section class="shop-page">
+  <header class="shop-header">
+    <div>
+      <span class="shop-eyebrow"><i class="bi bi-shop"></i> Vendedor</span>
+      <h1 class="shop-title">Mis servicios</h1>
+      <p class="shop-subtitle">
+        Crea y administra tus servicios. Un administrador los revisa antes de publicarse.
+      </p>
+    </div>
+
+    <a class="btn-gold" routerLink="/products/new">
+      <i class="bi bi-plus-lg"></i> Nuevo servicio
+    </a>
+  </header>
+
+  @if (loading) {
+    <div class="seller-grid">
+      @for (placeholder of [1, 2, 3]; track placeholder) {
+        <div class="skeleton" style="height: 220px"></div>
+      }
+    </div>
+  } @else if (error) {
+    <div class="empty-state">
+      <i class="bi bi-exclamation-triangle"></i>
+      <h2>Algo salió mal</h2>
+      <p>{{ error }}</p>
+      <button class="btn-outline" type="button" (click)="load()">Reintentar</button>
+    </div>
+  } @else if (products.length === 0) {
+    <div class="empty-state">
+      <i class="bi bi-shop"></i>
+      <h2>Todavía no tienes servicios</h2>
+      <p>Crea tu primer servicio y envíalo a revisión.</p>
+      <a class="btn-gold" routerLink="/products/new">
+        <i class="bi bi-plus-lg"></i> Crear servicio
+      </a>
+    </div>
+  } @else {
+    <div class="seller-grid">
+      @for (product of products; track product.id) {
+        <article class="bo-card seller-card">
+          <div class="seller-cover">
+            @if (product.images?.[0]) {
+              <img [src]="product.images?.[0] ?? ''" [alt]="product.name" />
+            } @else {
+              <div class="cover-empty"><i class="bi bi-image"></i></div>
+            }
+
+            <span class="status-pill" [class.completed]="product.approved" [class.pending]="!product.approved">
+              {{ product.approved ? 'Publicado' : 'En revisión' }}
+            </span>
+          </div>
+
+          <div class="seller-body">
+            <h2>{{ product.name }}</h2>
+            <span class="seller-category">{{ product.categoryName ?? 'Sin categoría' }}</span>
+
+            <div class="seller-meta">
+              <span class="seller-price">{{ product.price | currency: 'USD' }}</span>
+              <span class="seller-stock">
+                <i class="bi bi-box"></i> {{ product.stock }} en stock
+              </span>
+            </div>
+
+            <div class="seller-actions">
+              <a class="btn-outline" [routerLink]="['/products/update', product.id]">
+                <i class="bi bi-pencil"></i> Editar
+              </a>
+              <button
+                class="btn-ghost-danger"
+                type="button"
+                [disabled]="deletingId === product.id"
+                (click)="remove(product)"
+              >
+                <i class="bi bi-trash"></i> Eliminar
+              </button>
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+  }
+</section>

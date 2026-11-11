@@ -1,1 +1,19 @@
-<p>edit-product works!</p>
+<section class="edit-page">
+  <header class="edit-header">
+    <span class="edit-eyebrow"><i class="bi bi-pencil-square"></i> Editar servicio</span>
+    <h1>{{ product?.name ?? 'Servicio' }}</h1>
+    <p>Los cambios de contenido no afectan a pedidos ya realizados.</p>
+  </header>
+
+  @if (loading) {
+    <div class="skeleton" style="height: 420px"></div>
+  } @else if (error) {
+    <div class="state">
+      <i class="bi bi-exclamation-triangle"></i>
+      <p>{{ error }}</p>
+      <a class="btn-outline" href="/seller">Volver</a>
+    </div>
+  } @else if (product) {
+    <app-product-form [model]="product" (SubmitForm)="save($event)"></app-product-form>
+  }
+</section>
